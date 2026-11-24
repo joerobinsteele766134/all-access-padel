@@ -1,10 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>All Access Padel</title>
-<meta name="description" content="Find padel courts near you anywhere in Britain, with prices, deals and booking links.">
+<title>Padel courts near me: find &amp; book 700 UK courts | All Access Padel</title>
+<meta name="description" content="Find padel courts near you anywhere in Britain. 698 venues with court types, prices, deals and links to check availability on Playtomic, MATCHi and ClubSpark.">
+<meta property="og:type" content="website"><meta property="og:site_name" content="All Access Padel">
+<meta property="og:title" content="All Access Padel: find padel courts near you">
+<meta property="og:description" content="Every padel court in Britain, nearest first, with prices, deals and booking links.">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#2457d6">
+<link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt">
+<link rel="sitemap" type="application/xml" href="/sitemap.xml">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "All Access Padel", "description": "Find padel courts near you anywhere in Britain, with prices, deals and booking links."}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "All Access Padel"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is padel?", "acceptedAnswer": {"@type": "Answer", "text": "Padel is a racket sport played in doubles on a court about a third the size of a tennis court, surrounded by glass and mesh walls that stay in play. Most beginners are having proper rallies within their first hour."}}, {"@type": "Question", "name": "How do the walls work in padel?", "acceptedAnswer": {"@type": "Answer", "text": "The ball can bounce once on the floor and then come off the glass, and you can still hit it back."}}, {"@type": "Question", "name": "How do you serve in padel?", "acceptedAnswer": {"@type": "Answer", "text": "Bounce the ball and hit it underarm below waist height, diagonally into the opposite box. Scoring is the same as tennis: 15, 30, 40, game."}}, {"@type": "Question", "name": "What should I wear to play padel?", "acceptedAnswer": {"@type": "Answer", "text": "Trainers with a flat, grippy sole (court or tennis shoes are best, not running shoes) and comfortable sportswear. Most venues hire out rackets."}}, {"@type": "Question", "name": "How do I find a padel court near me?", "acceptedAnswer": {"@type": "Answer", "text": "Enter your postcode or town on All Access Padel to see every padel court in Britain sorted by distance, with prices where published and links to check availability and book."}}]}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@1,700;1,800;1,900&family=Barlow:wght@400;500;700&display=swap">
 <style>
@@ -169,7 +179,7 @@ footer p{max-width:75ch;margin:0 0 8px}
 <nav>
   <div class="wrap">
     <a class="brand" href="#top" aria-label="All Access Padel home"><svg><use href="#logo"/></svg><b>ALL ACCESS <i>PADEL</i></b></a>
-    <div class="links"><a href="#courts">Courts</a><a href="#map">Map</a><a href="#guide">New to padel</a><a href="#deals">Deals</a><a href="#add">Add a court</a></div>
+    <div class="links"><a href="#courts">Courts</a><a href="#map">Map</a><a href="#guide">New to padel</a><a href="#deals">Deals</a><a href="#add">Add a court</a><a href="/padel-courts">Areas</a></div>
   </div>
 </nav>
 
@@ -259,11 +269,20 @@ footer p{max-width:75ch;margin:0 0 8px}
 </section>
 </main>
 
+<section class="band" id="areas" aria-labelledby="ah">
+  <div class="wrap">
+    <h2 class="disp" id="ah">Browse padel courts by area</h2>
+    <p class="sub">Every area of England, Scotland and Wales with a padel court, each with its own page of venues, court types, prices and booking links.</p>
+    <p><a class="btn n" href="/padel-courts">See all areas</a></p>
+    <p class="sub" style="margin-top:14px">Popular: <a href="/padel-courts/oxford">Oxford</a> · <a href="/padel-courts/west-oxfordshire">West Oxfordshire</a> · <a href="/padel-courts/birmingham">Birmingham</a> · <a href="/padel-courts/manchester">Manchester</a> · <a href="/padel-courts/leeds">Leeds</a> · <a href="/padel-courts/bristol-city-of">Bristol</a> · <a href="/padel-courts/city-of-edinburgh">Edinburgh</a> · <a href="/padel-courts/cardiff">Cardiff</a> · <a href="/padel-courts/glasgow-city">Glasgow</a></p>
+  </div>
+</section>
+
 <footer class="band">
   <div class="wrap">
     <svg width="56" height="56" aria-hidden="true"><use href="#logo"/></svg>
     <div>
-      <p><b style="color:#fff">All Access Padel</b> · Padel courts across Britain</p>
+      <p><b style="color:#fff">All Access Padel</b> · Padel courts across Britain · <a href="/padel-courts" style="color:#fff">Courts by area</a></p>
       <p>Distances are in a straight line from your postcode, so the drive will be a bit further. Court details for Witney Lakes and Estelle Manor come from a directory listing, so give them a call first. Prices and offers change, so check with the venue before you go.</p>
       <p>Venue list built from the LTA's padel court finder, plus local research. Prices are taken from venues' own published rates where we could find them, and change often.</p>
       <p>We're independent and not connected to any of the venues listed. Your location stays in your browser and is never sent to us.</p>
@@ -341,7 +360,7 @@ function card(v){
   const tags=[];if(v.courts)tags.push(esc(v.courts));if(v.lta)tags.push("LTA registered");
   return `<article class="card${v.pick?" feat":""}" id="v-${esc(v.id)}">
     <div class="head"><div class="mi"><b>${v.d<1?"<1":Math.round(v.d)}</b><small>miles</small></div>
-      <div class="ht"><h3>${esc(v.n)}</h3><p class="addr">${esc(v.a)}</p></div></div>
+      <div class="ht"><h3><a href="/venues/${encodeURIComponent(v.id)}" style="color:inherit;text-decoration:none">${esc(v.n)}</a></h3><p class="addr">${esc(v.a)}</p></div></div>
     <div class="body">
       <div class="tagrow">${tags.map(t=>`<span class="tg">${t}</span>`).join("")}</div>
       ${v.pick?`<span class="flag pick">Our pick</span>`:""}${v.flag?`<span class="flag">${esc(v.flag)}</span>`:""}

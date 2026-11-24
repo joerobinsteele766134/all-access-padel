@@ -4,6 +4,7 @@ import * as admin from "./api/admin.js";
 import * as venues from "./api/venues.js";
 import * as importer from "./api/import.js";
 import { json } from "../lib/shared.js";
+import { seoRoute } from "./seo.js";
 
 const routes = { "/api/submissions": submissions, "/api/admin": admin, "/api/venues": venues, "/api/import": importer };
 
@@ -19,6 +20,7 @@ export default {
       catch (e) { console.error(e); return json({ error: "Something went wrong. Try again in a minute." }, 500); }
     }
     if (url.pathname.startsWith("/api/")) return json({ error: "Not found" }, 404);
+    try { const r = await seoRoute(request, env); if (r) return r; } catch (e) { console.error(e); }
     return env.ASSETS.fetch(request);
   },
 };
