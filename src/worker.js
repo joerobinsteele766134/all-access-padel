@@ -11,6 +11,13 @@ const routes = { "/api/submissions": submissions, "/api/admin": admin, "/api/ven
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
+    // One canonical address: send www, other TLDs and workers.dev to allaccesspadel.co.uk
+    const CANON = "allaccesspadel.co.uk";
+    const host = url.hostname.toLowerCase();
+    const redirectHosts = /^(www\.)?allaccesspadel\.(com|net|club|co\.uk)$|\.workers\.dev$/;
+    if (host !== CANON && redirectHosts.test(host)) {
+      if (!url.pathname.startsWith("/api/")) return Response.redirect(`https://${CANON}${url.pathname}${url.search}`, 301);
+    }
     const mod = routes[url.pathname];
     if (mod) {
       const name = "onRequest" + request.method.charAt(0) + request.method.slice(1).toLowerCase();
