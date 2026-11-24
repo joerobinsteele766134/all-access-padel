@@ -331,14 +331,25 @@ async function lookup(q){
     if(/^[A-Z]{1,2}\d[A-Z\d]?\d[A-Z]{2}$/.test(pc)){const r=await fetch("https://api.postcodes.io/postcodes/"+encodeURIComponent(pc));if(r.ok){const j=await r.json();if(j.result)return{name:j.result.postcode,lat:j.result.latitude,lng:j.result.longitude}}}
     else if(/^[A-Z]{1,2}\d[A-Z\d]?$/.test(pc)){const r=await fetch("https://api.postcodes.io/outcodes/"+encodeURIComponent(pc));if(r.ok){const j=await r.json();if(j.result)return{name:j.result.outcode,lat:j.result.latitude,lng:j.result.longitude}}}
   }catch(e){}
-  return lookupLocal(q);
+  const local=lookupLocal(q);if(local)return local;
+  try{
+    const r=await fetch("https://api.postcodes.io/places?limit=10&q="+encodeURIComponent(t));
+    if(r.ok){const j=await r.json();const list=(j.result||[]).filter(x=>x.latitude&&x.longitude);
+      const rank={"City":0,"Town":1,"Suburban Area":2,"Village":3,"Hamlet":4,"Other Settlement":5};
+      const low=t.toLowerCase();
+      list.sort((a,b)=>((a.name_1||"").toLowerCase()===low?0:1)-((b.name_1||"").toLowerCase()===low?0:1)||(rank[a.local_type]??9)-(rank[b.local_type]??9));
+      const p=list[0];if(p)return{name:p.name_1,lat:p.latitude,lng:p.longitude};}
+  }catch(e){}
+  const v=V.find(x=>(x.a||"").toLowerCase().includes(t.toLowerCase()));
+  if(v)return{name:t.replace(/\b\w/g,c=>c.toUpperCase()),lat:v.lat,lng:v.lng};
+  return null;
 }
 function setLoc(l){me=l;try{localStorage.setItem("aap-loc",JSON.stringify(l))}catch(e){}closeModal();refresh()}
 const modal=$("modal");
 function openModal(){modal.classList.add("on");$("mErr").textContent="";setTimeout(()=>$("mInput").focus(),50)}
 function closeModal(){modal.classList.remove("on")}
 $("locChange").addEventListener("click",openModal);
-$("mForm").addEventListener("submit",async e=>{e.preventDefault();$("mErr").textContent="Looking that up…";const r=await lookup($("mInput").value);if(r)setLoc(r);else $("mErr").textContent="We couldn't find that. Check the postcode, or try a nearby town name."});
+$("mForm").addEventListener("submit",async e=>{e.preventDefault();$("mErr").textContent="Looking that up…";const r=await lookup($("mInput").value);if(r)setLoc(r);else $("mErr").textContent="We couldn't find that. Check the spelling, or try a postcode."});
 $("mGeo").addEventListener("click",()=>{
   $("mErr").textContent="Finding you…";
   try{navigator.geolocation.getCurrentPosition(p=>setLoc({name:"your location",lat:p.coords.latitude,lng:p.coords.longitude}),()=>{$("mErr").textContent="We couldn't get your location. Type your postcode instead."},{timeout:8000})}
