@@ -7,6 +7,6 @@ export async function onRequestGet({ env }) {
     "SELECT id, name, postcode, lat, lng, district, country, courts, lta, url, email, tel, about, deal, price, price_note, price_source, tags, pick, flag, book_url FROM venues ORDER BY name"
   ).all();
   return new Response(JSON.stringify(results), {
-    headers: { "content-type": "application/json", "cache-control": "public, max-age=300" },
+    headers: { "content-type": "application/json", "cache-control": "public, max-age=60" },
   });
 }
