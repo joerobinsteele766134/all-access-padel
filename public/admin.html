@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>All Access Padel admin</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@1,900&family=Barlow:wght@400;700&display=swap">
+<style>
+:root{color-scheme:light dark;--bg:light-dark(#f3f1ea,#0a1430);--ink:light-dark(#0d1b3d,#eef1f8);--muted:light-dark(#4d5673,#a3adc8);--card:light-dark(#fff,#111f45);--line:light-dark(#0d1b3d,#2b3d6e)}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Barlow,system-ui,sans-serif}
+header{background:#0d1b3d;color:#fff;padding:16px max(5vw,16px)}
+h1{margin:0;font:italic 900 32px "Barlow Condensed",sans-serif}h1 i{color:#e4ff3a;font-style:inherit}
+main{max-width:1000px;margin:0 auto;padding:24px max(5vw,16px)}
+h2{font:italic 900 28px "Barlow Condensed",sans-serif;margin:28px 0 10px}
+form{display:flex;gap:8px;flex-wrap:wrap}
+input{flex:1;min-width:220px;font:16px Barlow,sans-serif;min-height:44px;padding:8px 10px;border:2px solid var(--line);border-radius:4px;background:var(--card);color:var(--ink)}
+button{font:700 15px Barlow,sans-serif;min-height:44px;padding:0 16px;border:0;border-radius:4px;background:#2457d6;color:#fff;cursor:pointer}
+button.del{background:transparent;color:var(--muted);text-decoration:underline;min-height:36px;padding:0}
+.item{background:var(--card);border:2px solid var(--line);border-radius:4px;padding:12px 14px;margin-bottom:10px}
+.item p{margin:2px 0}.meta{color:var(--muted);font-size:14px}
+.msg{font-weight:700;min-height:1.4em}
+</style>
+</head>
+<body>
+<header><h1>All Access <i>Padel</i> admin</h1></header>
+<main>
+  <form id="f"><input id="k" type="password" placeholder="Admin key" aria-label="Admin key" autocomplete="current-password"><button>Open</button></form>
+  <p class="msg" id="msg"></p>
+  <div id="out" hidden>
+    <h2>Submissions</h2><div id="subs"></div>
+    <h2>Find a 4th posts</h2><div id="posts"></div>
+  </div>
+</main>
+<script>
+{
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+let key="";try{key=sessionStorage.getItem("aap-admin")||""}catch(e){}
+const when=t=>t?new Date(t).toLocaleString("en-GB",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}):"";
+async function load(){
+  $("msg").textContent="Loading…";
+  const r=await fetch("/api/admin",{headers:{"x-admin-key":key}});const j=await r.json().catch(()=>({}));
+  if(!r.ok){$("msg").textContent=j.error||"Couldn't load.";$("out").hidden=true;return}
+  try{sessionStorage.setItem("aap-admin",key)}catch(e){}
+  $("msg").textContent="";$("out").hidden=false;
+  $("subs").innerHTML=j.submissions.length?j.submissions.map(s=>`<div class="item"><p><b>${esc(s.type)}</b> · ${esc(s.venue)}</p><p>${esc(s.details)}</p><p class="meta">${esc(s.contact)} ${s.contact?"·":""} ${when(s.created)}</p><button class="del" data-kind="submission" data-id="${esc(s.id)}">Delete</button></div>`).join(""):"<p class='meta'>Nothing sent in yet.</p>";
+  $("posts").innerHTML=j.fourths.length?j.fourths.map(p=>`<div class="item"><p><b>${esc(p.date)} ${esc(p.time)}</b> · ${esc(p.venue)} · need ${esc(p.need)} · ${esc(p.level)}</p><p>${esc(p.contact)}</p><button class="del" data-kind="fourth" data-id="${esc(p.id)}">Remove post</button></div>`).join(""):"<p class='meta'>No live posts.</p>";
+}
+$("f").addEventListener("submit",e=>{e.preventDefault();key=$("k").value.trim();load()});
+document.addEventListener("click",async e=>{const b=e.target.closest(".del");if(!b)return;
+  const r=await fetch(`/api/admin?kind=${encodeURIComponent(b.dataset.kind)}&id=${encodeURIComponent(b.dataset.id)}`,{method:"DELETE",headers:{"x-admin-key":key}});
+  if(r.ok)load();else $("msg").textContent="Couldn't delete that.";});
+if(key)load();
+}
+</script>
+</body>
+</html>

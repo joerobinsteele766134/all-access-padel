@@ -1,0 +1,144 @@
+[
+  {
+    "id": "witney-town",
+    "n": "Witney town courts",
+    "a": "Witney · run by Courtside",
+    "lat": 51.786,
+    "lng": -1.487,
+    "c": "New courts",
+    "t": [
+      "check"
+    ],
+    "flag": "Opening date to confirm",
+    "about": "Witney Town Council put £250k towards new padel courts with Courtside, and building was under way in summer 2025. Ring Courtside to check they're open and how to book.",
+    "tel": "0845 475 1147",
+    "url": "https://witney-tc.gov.uk/council/services/sports-recreation",
+    "lk": "Council sports page"
+  },
+  {
+    "id": "witney-lakes",
+    "n": "Witney Lakes Resort",
+    "a": "Downs Rd, Witney OX29 0SY",
+    "lat": 51.776,
+    "lng": -1.525,
+    "c": "1 outdoor court",
+    "t": [
+      "check"
+    ],
+    "flag": "Call to confirm",
+    "about": "Golf and leisure resort on the edge of town. Give them a ring to check the court's available and how booking works.",
+    "tel": "01993 893000",
+    "url": "https://padeldir.com/en/united-kingdom/witney/witney-lakes-resort",
+    "lk": "Venue listing"
+  },
+  {
+    "id": "estelle",
+    "n": "Estelle Manor",
+    "a": "Eynsham Park, Witney OX29 6PN",
+    "lat": 51.778,
+    "lng": -1.398,
+    "c": "1 outdoor court",
+    "t": [
+      "members"
+    ],
+    "about": "Private members' estate and hotel, so expect members and guests only.",
+    "tel": "01993 685800",
+    "url": "https://padeldir.com/en/united-kingdom/witney/estelle-manor",
+    "lk": "Venue listing"
+  },
+  {
+    "id": "smash",
+    "n": "Smash Padel Oxford",
+    "a": "North Hinksey Village, Oxford OX2 0NA",
+    "lat": 51.748,
+    "lng": -1.287,
+    "c": "3 panoramic courts, floodlit",
+    "t": [
+      "payplay",
+      "deal"
+    ],
+    "pick": true,
+    "rack": 3,
+    "rackNote": "Smash Padel hires rackets at £3 each, or 4 for £10.",
+    "about": "The best bet for turning up and playing. Pay & play is open to everyone, and you can book 7 days ahead on Matchi. Socials, box leagues, coaching and free parking.",
+    "deal": "Free intro session if you're new to padel. Racket hire is £3 each, or 4 for £10.",
+    "tel": "07561 855654",
+    "url": "https://www.matchi.se/facilities/smashpadeloxford",
+    "lk": "Book on Matchi"
+  },
+  {
+    "id": "north-oxford",
+    "n": "North Oxford LTC",
+    "a": "546 Banbury Rd, Oxford OX2 8EG",
+    "lat": 51.786,
+    "lng": -1.268,
+    "c": "Padel court + coaching",
+    "t": [
+      "coaching",
+      "deal"
+    ],
+    "about": "Good for lessons. Coaching sessions cost about £7.50 to £13.50 each.",
+    "deal": "Free coached taster sessions run from time to time. Check ClubSpark for the next one.",
+    "url": "https://clubspark.lta.org.uk/NorthOxfordLawnTennisClub",
+    "lk": "See sessions"
+  },
+  {
+    "id": "cotswolds",
+    "n": "Cotswolds Hotel & Spa",
+    "a": "Southcombe, Chipping Norton OX7 5QH",
+    "lat": 51.938,
+    "lng": -1.505,
+    "c": "2 outdoor courts, floodlit",
+    "t": [
+      "payplay"
+    ],
+    "about": "The only padel in Chipping Norton. Open to members and guests, with kit hire at reception.",
+    "url": "https://playtomic.com/padel-at-cotswolds-hotel-and-spa/e8f09e94-ca9f-402f-8c1a-49fa091e8a10",
+    "lk": "Book on Playtomic"
+  },
+  {
+    "id": "daylesford",
+    "n": "Daylesford Padel & Stay",
+    "a": "Kingham · The Wild Rabbit",
+    "lat": 51.925,
+    "lng": -1.645,
+    "c": "Stay + play packages",
+    "t": [
+      "members",
+      "deal"
+    ],
+    "about": "Cottage stays with padel at Daylesford Farm. More of a treat than a weekly game.",
+    "deal": "Padel & Stay packages all year round. A good present.",
+    "url": "https://thewildrabbit.co.uk/seasonal-rates/padel-stay/",
+    "lk": "See packages"
+  },
+  {
+    "id": "tilsley",
+    "n": "Tilsley Park",
+    "a": "Abingdon",
+    "lat": 51.675,
+    "lng": -1.3,
+    "c": "3 covered courts",
+    "t": [
+      "payplay",
+      "covered"
+    ],
+    "about": "New covered courts, so the rain won't stop your game. Book online or in the Abingdon Sports and Leisure app.",
+    "url": "https://www.abingdon.org.uk/sports-and-leisure/?p=21315",
+    "lk": "Venue info"
+  },
+  {
+    "id": "dl-bicester",
+    "n": "David Lloyd Bicester",
+    "a": "Bicester",
+    "lat": 51.89,
+    "lng": -1.16,
+    "c": "3 outdoor courts",
+    "t": [
+      "members"
+    ],
+    "about": "Book in the David Lloyd Clubs app. Worth it if you're already a member.",
+    "url": "https://davidlloyd.co.uk/clubs/bicester/padel",
+    "lk": "Club page"
+  }
+]
