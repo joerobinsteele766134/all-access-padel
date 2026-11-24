@@ -2,9 +2,11 @@
 import * as fourths from "./api/fourths.js";
 import * as submissions from "./api/submissions.js";
 import * as admin from "./api/admin.js";
+import * as venues from "./api/venues.js";
+import * as importer from "./api/import.js";
 import { json } from "../lib/shared.js";
 
-const routes = { "/api/fourths": fourths, "/api/submissions": submissions, "/api/admin": admin };
+const routes = { "/api/fourths": fourths, "/api/submissions": submissions, "/api/admin": admin, "/api/venues": venues, "/api/import": importer };
 
 export default {
   async fetch(request, env, ctx) {

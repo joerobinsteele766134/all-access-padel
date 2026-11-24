@@ -22,3 +22,29 @@ CREATE TABLE IF NOT EXISTS submissions (
   created INTEGER NOT NULL
 );
 CREATE INDEX IF NOT EXISTS idx_submissions_ip ON submissions (ip, created);
+CREATE TABLE IF NOT EXISTS venues (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  postcode TEXT,
+  lat REAL NOT NULL,
+  lng REAL NOT NULL,
+  district TEXT,
+  country TEXT,
+  courts TEXT,
+  lta INTEGER DEFAULT 0,
+  url TEXT,
+  email TEXT,
+  tel TEXT,
+  about TEXT,
+  deal TEXT,
+  price TEXT,
+  price_note TEXT,
+  price_source TEXT,
+  tags TEXT,
+  pick INTEGER DEFAULT 0,
+  flag TEXT,
+  source TEXT,
+  updated INTEGER
+);
+CREATE INDEX IF NOT EXISTS idx_venues_latlng ON venues (lat, lng);
+CREATE TABLE IF NOT EXISTS import_tokens (token TEXT PRIMARY KEY, created INTEGER);
