@@ -16,5 +16,8 @@
       "database_id": "59c6f002-d9e9-4e15-9e73-721cb51ff370"
     }
   ],
+  "send_email": [
+    { "name": "MAILER", "destination_address": "joe@robinsteele.co.uk" }
+  ],
   "observability": { "enabled": true }
 }

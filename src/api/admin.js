@@ -13,7 +13,7 @@ async function authorised(request, env) {
 export async function onRequestGet({ request, env }) {
   const no = needDb(env); if (no) return no;
   if (!(await authorised(request, env))) return json({ error: "Wrong admin key." }, 401);
-  const subs = await env.DB.prepare("SELECT id, type, venue, details, contact, created FROM submissions ORDER BY created DESC LIMIT 200").all();
+  const subs = await env.DB.prepare("SELECT id, type, venue, details, contact, created, COALESCE(status, 'pending') AS status FROM submissions ORDER BY (COALESCE(status,'pending')='pending') DESC, created DESC LIMIT 200").all();
   return json({ submissions: subs.results });
 }
 
@@ -25,5 +25,15 @@ export async function onRequestDelete({ request, env }) {
   const table = kind === "submission" ? "submissions" : null;
   if (!table || !id) return json({ error: "Missing details." }, 400);
   await env.DB.prepare(`DELETE FROM ${table} WHERE id = ?`).bind(id).run();
+  return json({ ok: true });
+}
+
+export async function onRequestPatch({ request, env }) {
+  const no = needDb(env); if (no) return no;
+  if (!(await authorised(request, env))) return json({ error: "Wrong admin key." }, 401);
+  const u = new URL(request.url);
+  const id = u.searchParams.get("id") || "", status = u.searchParams.get("status") || "";
+  if (!id || !["approved", "rejected", "pending"].includes(status)) return json({ error: "Missing details." }, 400);
+  await env.DB.prepare("UPDATE submissions SET status = ? WHERE id = ?").bind(status, id).run();
   return json({ ok: true });
 }

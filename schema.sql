@@ -19,7 +19,8 @@ CREATE TABLE IF NOT EXISTS submissions (
   details TEXT NOT NULL,
   contact TEXT,
   ip TEXT,
-  created INTEGER NOT NULL
+  created INTEGER NOT NULL,
+  status TEXT DEFAULT 'pending'
 );
 CREATE INDEX IF NOT EXISTS idx_submissions_ip ON submissions (ip, created);
 CREATE TABLE IF NOT EXISTS venues (

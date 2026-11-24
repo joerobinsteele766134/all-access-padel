@@ -254,7 +254,7 @@ footer p{max-width:75ch;margin:0 0 8px}
           <div class="full"><label for="sType">What is it?</label><select id="sType"><option>A court we've missed</option><option>A deal or offer</option><option>A price</option><option>Something's wrong</option><option>Feature my club</option></select></div>
           <div class="full"><label for="sVenue">Venue name</label><input id="sVenue" maxlength="100" required></div>
           <div class="full"><label for="sDetails">Details</label><textarea id="sDetails" maxlength="800" required placeholder="Where it is, prices, how to book, dates of the offer…"></textarea></div>
-          <div class="full"><label for="sContact">Your email or phone (optional)</label><input id="sContact" maxlength="120"><p class="hint">Only the site owner sees what you send here.</p></div>
+          <div class="full"><label for="sContact">Your email or phone (optional)</label><input id="sContact" maxlength="120"><p class="hint">Only the site owner sees what you send here. Everything is checked before it goes on the site.</p></div>
         </div>
         <input id="sHp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px">
         <button class="btn b" type="submit" style="margin-top:14px;width:100%">Send it in</button>
@@ -435,7 +435,7 @@ const post=async(url,body)=>{const r=await fetch(url,{method:"POST",headers:{"co
 $("sForm").addEventListener("submit",async e=>{
   e.preventDefault();$("sStatus").textContent="Sending…";
   try{await post("/api/submissions",{type:$("sType").value,venue:$("sVenue").value,details:$("sDetails").value,contact:$("sContact").value,website:$("sHp").value});
-    $("sStatus").textContent="Thanks, got it. We'll check it and add it to the site.";e.target.reset()}
+    $("sStatus").textContent="Thanks, got it. We'll check it before it goes on the site.";e.target.reset()}
   catch(err){$("sStatus").textContent=err.message}
 });
 function refresh(){$("locName").textContent=me.name;if(V.length)populate();renderCourts();drawMap()}

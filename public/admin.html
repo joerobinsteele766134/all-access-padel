@@ -20,6 +20,7 @@ button{font:700 15px Barlow,sans-serif;min-height:44px;padding:0 16px;border:0;b
 button.del{background:transparent;color:var(--muted);text-decoration:underline;min-height:36px;padding:0}
 .item{background:var(--card);border:2px solid var(--line);border-radius:4px;padding:12px 14px;margin-bottom:10px}
 .item p{margin:2px 0}.meta{color:var(--muted);font-size:14px}
+.st{display:inline-block;font-size:13px;font-weight:700;padding:2px 8px;border-radius:3px;background:#ffe9c2;color:#6b3f00}.st.approved{background:#d9f7d0;color:#1d5c12}.st.rejected{background:#eee;color:#555}.act{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.act button{min-height:38px}.act .no{background:#6b7280}
 .msg{font-weight:700;min-height:1.4em}
 </style>
 </head>
@@ -29,7 +30,7 @@ button.del{background:transparent;color:var(--muted);text-decoration:underline;m
   <form id="f"><input id="k" type="password" placeholder="Admin key" aria-label="Admin key" autocomplete="current-password"><button>Open</button></form>
   <p class="msg" id="msg"></p>
   <div id="out" hidden>
-    <h2>Submissions</h2><div id="subs"></div>
+    <h2>Submissions</h2><p class="meta">New ones arrive as pending and are emailed to you. Only approved ones get added to the site.</p><div id="subs"></div>
   </div>
 </main>
 <script>
@@ -44,10 +45,10 @@ async function load(){
   if(!r.ok){$("msg").textContent=j.error||"Couldn't load.";$("out").hidden=true;return}
   try{sessionStorage.setItem("aap-admin",key)}catch(e){}
   $("msg").textContent="";$("out").hidden=false;
-  $("subs").innerHTML=j.submissions.length?j.submissions.map(s=>`<div class="item"><p><b>${esc(s.type)}</b> · ${esc(s.venue)}</p><p>${esc(s.details)}</p><p class="meta">${esc(s.contact)} ${s.contact?"·":""} ${when(s.created)}</p><button class="del" data-kind="submission" data-id="${esc(s.id)}">Delete</button></div>`).join(""):"<p class='meta'>Nothing sent in yet.</p>";
+  $("subs").innerHTML=j.submissions.length?j.submissions.map(s=>`<div class="item"><p><span class="st ${esc(s.status)}">${esc(s.status)}</span> <b>${esc(s.type)}</b> · ${esc(s.venue)}</p><p style="white-space:pre-wrap">${esc(s.details)}</p><p class="meta">${esc(s.contact)} ${s.contact?"·":""} ${when(s.created)}</p><div class="act">${s.status!=="approved"?`<button class="set" data-id="${esc(s.id)}" data-status="approved">Approve</button>`:""}${s.status!=="rejected"?`<button class="set no" data-id="${esc(s.id)}" data-status="rejected">Reject</button>`:""}<button class="del" data-kind="submission" data-id="${esc(s.id)}">Delete</button></div></div>`).join(""):"<p class='meta'>Nothing sent in yet.</p>";
 }
 $("f").addEventListener("submit",e=>{e.preventDefault();key=$("k").value.trim();load()});
-document.addEventListener("click",async e=>{const b=e.target.closest(".del");if(!b)return;
+document.addEventListener("click",async e=>{const st=e.target.closest(".set");if(st){const r=await fetch(`/api/admin?id=${encodeURIComponent(st.dataset.id)}&status=${encodeURIComponent(st.dataset.status)}`,{method:"PATCH",headers:{"x-admin-key":key}});if(r.ok)load();else $("msg").textContent="Couldn't update that.";return}const b=e.target.closest(".del");if(!b)return;
   const r=await fetch(`/api/admin?kind=${encodeURIComponent(b.dataset.kind)}&id=${encodeURIComponent(b.dataset.id)}`,{method:"DELETE",headers:{"x-admin-key":key}});
   if(r.ok)load();else $("msg").textContent="Couldn't delete that.";});
 if(key)load();
