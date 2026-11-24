@@ -44,7 +44,8 @@ CREATE TABLE IF NOT EXISTS venues (
   pick INTEGER DEFAULT 0,
   flag TEXT,
   source TEXT,
-  updated INTEGER
+  updated INTEGER,
+  book_url TEXT
 );
 CREATE INDEX IF NOT EXISTS idx_venues_latlng ON venues (lat, lng);
 CREATE TABLE IF NOT EXISTS import_tokens (token TEXT PRIMARY KEY, created INTEGER);

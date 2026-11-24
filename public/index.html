@@ -81,6 +81,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .dealbox{background:var(--ball);color:var(--navy);padding:10px 12px;border-radius:3px;font-size:15px;font-weight:500}
 .book{margin-top:auto;display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding-top:4px}
 .book .btn{min-height:44px;font-size:15px}
+.book .btn.y{border-color:var(--navy)}
 .tel{font-size:14px;color:var(--muted);white-space:nowrap;font-weight:500}
 .adcard{border-style:dashed;box-shadow:none;justify-content:center;padding:22px;gap:10px}
 .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
@@ -350,11 +351,13 @@ $("mGeo").addEventListener("click",()=>{
 modal.addEventListener("keydown",e=>{let has=false;try{has=!!localStorage.getItem("aap-loc")}catch(err){}if(e.key==="Escape"&&has)closeModal()});
 
 /* courts */
-const F=[["all","Everything"],["indoor","Indoor"],["covered","Covered"],["outdoor","Outdoor"],["price","Has a price"],["deal","Deals"],["lta","LTA registered"]];
+const F=[["all","Everything"],["indoor","Indoor"],["covered","Covered"],["outdoor","Outdoor"],["price","Has a price"],["deal","Deals"],["book","Book online"],["lta","LTA registered"]];
 let cur="all",shown=24,query="";
 try{const s=localStorage.getItem("aap-filter");if(s&&F.some(f=>f[0]===s))cur=s}catch(e){}
 const withD=()=>V.map(v=>({...v,d:miles(me.lat,me.lng,v.lat,v.lng)})).sort((a,b)=>a.d-b.d);
 const linkOf=v=>{const u=(v.url||"").trim();if(!u||/\s/.test(u)||!/\./.test(u)||u.startsWith("@"))return "";return /^https?:\/\//i.test(u)?u:"https://"+u};
+const appOf=u=>{const h=(u||"").toLowerCase();return h.includes("playtomic")?"Playtomic":h.includes("matchi")?"MATCHi":h.includes("nettla")?"Nettla":(h.includes("clubspark")||h.includes("lta.org.uk"))?"ClubSpark":"the booking page"};
+const safe=u=>/^https:\/\//i.test(u||"")?u:"";
 const matches=(v,q)=>!q||(v.n+" "+v.a+" "+(v.pc||"")).toLowerCase().includes(q);
 function card(v){
   const link=linkOf(v);
@@ -368,7 +371,7 @@ function card(v){
       ${v.price?`<p class="price">${esc(v.price)}${v.price_note?`<small>${esc(v.price_note)}</small>`:""}</p>`:`<p class="price" style="font-weight:500;color:var(--muted)">Price: check when booking</p>`}
       ${v.about?`<p>${esc(v.about)}</p>`:""}
       ${v.deal?`<div class="dealbox"><b>Deal:</b> ${esc(v.deal)}</div>`:""}
-      <div class="book">${link?`<a class="btn b" href="${esc(link)}" target="_blank" rel="noopener">Book or visit site</a>`:""}${v.email?`<span class="tel">${esc(v.email)}</span>`:""}${v.tel?`<span class="tel">${esc(v.tel)}</span>`:""}${!link&&!v.email&&!v.tel?`<span class="tel">Search the venue name to book</span>`:""}</div>
+      <div class="book">${safe(v.book)?`<a class="btn y" href="${esc(v.book)}" target="_blank" rel="noopener">Check availability on ${appOf(v.book)}</a>`:""}${link&&link!==v.book?`<a class="btn b" href="${esc(link)}" target="_blank" rel="noopener">${safe(v.book)?"Website":"Book or visit site"}</a>`:""}${v.email?`<span class="tel">${esc(v.email)}</span>`:""}${v.tel?`<span class="tel">${esc(v.tel)}</span>`:""}${!link&&!safe(v.book)&&!v.email&&!v.tel?`<span class="tel">Search the venue name to book</span>`:""}</div>
     </div></article>`;
 }
 function renderCourts(){
@@ -458,7 +461,7 @@ $("sForm").addEventListener("submit",async e=>{
   catch(err){$("sStatus").textContent=err.message}
 });
 function refresh(){$("locName").textContent=me.name;if(V.length)populate();renderCourts();drawMap()}
-fetch("/api/venues").then(r=>r.json()).then(d=>{V=(Array.isArray(d)?d:[]).map(r=>{const t=(r.tags||"").split(",").map(s=>s.trim()).filter(Boolean);const c=(r.courts||"").toLowerCase();if(c.includes("indoor"))t.push("indoor");if(c.includes("covered"))t.push("covered");if(c.split(",").some(x=>x.trim()==="outdoor"))t.push("outdoor");if(r.price)t.push("price");if(r.deal)t.push("deal");if(r.lta)t.push("lta");return{id:r.id,n:r.name,a:[r.district,r.postcode].filter(Boolean).join(" · "),pc:r.postcode,lat:+r.lat,lng:+r.lng,courts:r.courts,lta:!!r.lta,url:r.url,email:r.email,tel:r.tel,about:r.about,deal:r.deal,price:r.price,price_note:r.price_note,pick:!!r.pick,flag:r.flag,t}}).filter(v=>isFinite(v.lat)&&isFinite(v.lng));refresh();loadPosts()}).catch(()=>{$("grid").innerHTML=`<div class="empty">Couldn't load the court list. Refresh to try again.</div>`});
+fetch("/api/venues").then(r=>r.json()).then(d=>{V=(Array.isArray(d)?d:[]).map(r=>{const t=(r.tags||"").split(",").map(s=>s.trim()).filter(Boolean);const c=(r.courts||"").toLowerCase();if(c.includes("indoor"))t.push("indoor");if(c.includes("covered"))t.push("covered");if(c.split(",").some(x=>x.trim()==="outdoor"))t.push("outdoor");if(r.price)t.push("price");if(r.deal)t.push("deal");if(r.lta)t.push("lta");if(r.book_url)t.push("book");return{id:r.id,n:r.name,a:[r.district,r.postcode].filter(Boolean).join(" · "),pc:r.postcode,lat:+r.lat,lng:+r.lng,courts:r.courts,lta:!!r.lta,url:r.url,email:r.email,tel:r.tel,about:r.about,deal:r.deal,price:r.price,price_note:r.price_note,pick:!!r.pick,flag:r.flag,book:r.book_url,t}}).filter(v=>isFinite(v.lat)&&isFinite(v.lng));refresh();loadPosts()}).catch(()=>{$("grid").innerHTML=`<div class="empty">Couldn't load the court list. Refresh to try again.</div>`});
 let asked=false;try{asked=!!localStorage.getItem("aap-loc")}catch(e){}
 if(!asked)openModal();
 }
