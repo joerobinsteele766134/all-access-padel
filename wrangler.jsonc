@@ -19,5 +19,6 @@
   "send_email": [
     { "name": "MAILER", "destination_address": "joe@robinsteele.co.uk" }
   ],
+  "vars": { "AMAZON_TAG": "allaccesspadel-21" },
   "observability": { "enabled": true }
 }

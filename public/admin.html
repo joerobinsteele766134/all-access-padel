@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,15 +13,19 @@ body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Barlow,system-
 header{background:#0d1b3d;color:#fff;padding:16px max(5vw,16px)}
 h1{margin:0;font:italic 900 32px "Barlow Condensed",sans-serif}h1 i{color:#e4ff3a;font-style:inherit}
 main{max-width:1000px;margin:0 auto;padding:24px max(5vw,16px)}
-h2{font:italic 900 28px "Barlow Condensed",sans-serif;margin:28px 0 10px}
+h2{font:italic 900 28px "Barlow Condensed",sans-serif;margin:30px 0 6px}
+nav.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}nav.tabs a{font-weight:700;color:inherit;border:2px solid var(--line);border-radius:4px;padding:6px 10px;text-decoration:none}
 form{display:flex;gap:8px;flex-wrap:wrap}
 input{flex:1;min-width:220px;font:16px Barlow,sans-serif;min-height:44px;padding:8px 10px;border:2px solid var(--line);border-radius:4px;background:var(--card);color:var(--ink)}
-button{font:700 15px Barlow,sans-serif;min-height:44px;padding:0 16px;border:0;border-radius:4px;background:#2457d6;color:#fff;cursor:pointer}
-button.del{background:transparent;color:var(--muted);text-decoration:underline;min-height:36px;padding:0}
+button{font:700 15px Barlow,sans-serif;min-height:40px;padding:0 14px;border:0;border-radius:4px;background:#2457d6;color:#fff;cursor:pointer}
+button.no{background:#6b7280}button.del{background:transparent;color:var(--muted);text-decoration:underline;padding:0}
 .item{background:var(--card);border:2px solid var(--line);border-radius:4px;padding:12px 14px;margin-bottom:10px}
 .item p{margin:2px 0}.meta{color:var(--muted);font-size:14px}
-.st{display:inline-block;font-size:13px;font-weight:700;padding:2px 8px;border-radius:3px;background:#ffe9c2;color:#6b3f00}.st.approved{background:#d9f7d0;color:#1d5c12}.st.rejected{background:#eee;color:#555}.act{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.act button{min-height:38px}.act .no{background:#6b7280}
-.msg{font-weight:700;min-height:1.4em}
+.st{display:inline-block;font-size:13px;font-weight:700;padding:2px 8px;border-radius:3px;background:#ffe9c2;color:#6b3f00}.st.approved,.st.applied{background:#d9f7d0;color:#1d5c12}.st.rejected{background:#eee;color:#555}
+.act{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
+.link{display:block;background:#e4ff3a;color:#0d1b3d;padding:8px;border-radius:4px;font-family:monospace;word-break:break-all;margin-top:6px}
+.stars{color:#f5a400}.msg{font-weight:700;min-height:1.4em}
+.count{background:#d93025;color:#fff;border-radius:10px;padding:0 7px;font-size:13px;margin-left:4px}
 </style>
 </head>
 <body>
@@ -30,7 +34,15 @@ button.del{background:transparent;color:var(--muted);text-decoration:underline;m
   <form id="f"><input id="k" type="password" placeholder="Admin key" aria-label="Admin key" autocomplete="current-password"><button>Open</button></form>
   <p class="msg" id="msg"></p>
   <div id="out" hidden>
-    <h2>Submissions</h2><p class="meta">New ones arrive as pending and are emailed to you. Only approved ones get added to the site.</p><div id="subs"></div>
+    <nav class="tabs"><a href="#subs-h">Submissions</a><a href="#rev-h">Reviews</a><a href="#cl-h">Claims</a><a href="#ed-h">Club edits</a><a href="#ft-h">Featured</a></nav>
+    <h2 id="subs-h">Submissions</h2><p class="meta">Tips from the "Add a court or a deal" form. Approved ones are added in the weekly update.</p><div id="subs"></div>
+    <h2 id="rev-h">Reviews</h2><p class="meta">Reviews only appear on the site once you approve them.</p><div id="revs"></div>
+    <h2 id="cl-h">Venue claims</h2><p class="meta">Check the person really works there (email domain matches the club's website, or ring the venue) before approving. Approving gives you a private link to send them.</p><div id="claims"></div>
+    <h2 id="ed-h">Club edits</h2><p class="meta">Changes proposed by clubs. They only go live when you approve them.</p><div id="edits"></div>
+    <h2 id="ft-h">Featured venues</h2><p class="meta">Featured venues show first in their area and near the top of nearby searches.</p>
+    <div id="feat"></div>
+    <form id="ff" style="margin-top:10px"><input id="fq" placeholder="Search a venue to feature" autocomplete="off"></form>
+    <div id="fres"></div>
   </div>
 </main>
 <script>
@@ -38,19 +50,41 @@ button.del{background:transparent;color:var(--muted);text-decoration:underline;m
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 let key="";try{key=sessionStorage.getItem("aap-admin")||""}catch(e){}
+let venues=[];
 const when=t=>t?new Date(t).toLocaleString("en-GB",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}):"";
+const btns=(kind,id,status)=>`<div class="act">${status!=="approved"?`<button class="set" data-kind="${kind}" data-id="${esc(id)}" data-status="approved">Approve</button>`:""}${status!=="rejected"?`<button class="set no" data-kind="${kind}" data-id="${esc(id)}" data-status="rejected">Reject</button>`:""}${kind==="submission"||kind==="review"?`<button class="del" data-kind="${kind}" data-id="${esc(id)}">Delete</button>`:""}</div>`;
+const none=t=>`<p class="meta">${t}</p>`;
+function badge(id,list){const n=list.filter(x=>(x.status||"pending")==="pending").length;const a=document.querySelector(`a[href="#${id}"]`);if(a)a.innerHTML=a.textContent.replace(/\s*\d+$/,"")+(n?`<span class="count">${n}</span>`:"")}
 async function load(){
   $("msg").textContent="Loading…";
   const r=await fetch("/api/admin",{headers:{"x-admin-key":key}});const j=await r.json().catch(()=>({}));
   if(!r.ok){$("msg").textContent=j.error||"Couldn't load.";$("out").hidden=true;return}
   try{sessionStorage.setItem("aap-admin",key)}catch(e){}
   $("msg").textContent="";$("out").hidden=false;
-  $("subs").innerHTML=j.submissions.length?j.submissions.map(s=>`<div class="item"><p><span class="st ${esc(s.status)}">${esc(s.status)}</span> <b>${esc(s.type)}</b> · ${esc(s.venue)}</p><p style="white-space:pre-wrap">${esc(s.details)}</p><p class="meta">${esc(s.contact)} ${s.contact?"·":""} ${when(s.created)}</p><div class="act">${s.status!=="approved"?`<button class="set" data-id="${esc(s.id)}" data-status="approved">Approve</button>`:""}${s.status!=="rejected"?`<button class="set no" data-id="${esc(s.id)}" data-status="rejected">Reject</button>`:""}<button class="del" data-kind="submission" data-id="${esc(s.id)}">Delete</button></div></div>`).join(""):"<p class='meta'>Nothing sent in yet.</p>";
+  $("subs").innerHTML=j.submissions.length?j.submissions.map(s=>`<div class="item"><p><span class="st ${esc(s.status)}">${esc(s.status)}</span> <b>${esc(s.type)}</b> · ${esc(s.venue)}</p><p style="white-space:pre-wrap">${esc(s.details)}</p><p class="meta">${esc(s.contact)} ${s.contact?"·":""} ${when(s.created)}</p>${btns("submission",s.id,s.status)}</div>`).join(""):none("Nothing sent in yet.");
+  $("revs").innerHTML=j.reviews.length?j.reviews.map(v=>`<div class="item"><p><span class="st ${esc(v.status)}">${esc(v.status)}</span> <span class="stars">${"★".repeat(v.rating)}${"☆".repeat(5-v.rating)}</span> <b>${esc(v.title||"")}</b> · <a href="/venues/${encodeURIComponent(v.venue_id)}" target="_blank">${esc(v.venue)}</a></p><p style="white-space:pre-wrap">${esc(v.body)}</p><p class="meta">${esc(v.name)} · ${when(v.created)}</p>${btns("review",v.id,v.status)}</div>`).join(""):none("No reviews yet.");
+  $("claims").innerHTML=j.claims.length?j.claims.map(c=>`<div class="item"><p><span class="st ${esc(c.status)}">${esc(c.status)}</span> <b>${esc(c.venue)}</b></p><p>${esc(c.name)}${c.role?" · "+esc(c.role):""} · ${esc(c.email)}${c.phone?" · "+esc(c.phone):""}</p>${c.message?`<p style="white-space:pre-wrap">${esc(c.message)}</p>`:""}<p class="meta">Venue website: ${esc(c.venue_url||"none on file")} · ${when(c.created)}</p>${c.status==="approved"&&c.token?`<p class="meta">Their private edit link (send it to ${esc(c.email)}):</p><span class="link">https://allaccesspadel.co.uk/club.html#${esc(c.token)}</span>`:""}${btns("claim",c.id,c.status)}</div>`).join(""):none("No claims yet.");
+  $("edits").innerHTML=j.edits.length?j.edits.map(e=>{let d={};try{d=JSON.parse(e.data)}catch(x){}return `<div class="item"><p><span class="st ${esc(e.status)}">${esc(e.status)}</span> <b><a href="/venues/${encodeURIComponent(e.venue_id)}" target="_blank">${esc(e.venue)}</a></b> · ${when(e.created)}</p>${Object.entries(d).map(([k,v])=>`<p><b>${esc(k)}:</b> ${esc(v||"(cleared)")}</p>`).join("")}${btns("edit",e.id,e.status)}</div>`}).join(""):none("No edits yet.");
+  $("feat").innerHTML=j.featured.length?j.featured.map(v=>`<div class="item"><p><b>${esc(v.name)}</b> · featured until ${new Date(v.featured_until).toLocaleDateString("en-GB")}</p><div class="act"><button class="ft" data-id="${esc(v.id)}" data-days="30">Extend 30 days</button><button class="ft no" data-id="${esc(v.id)}" data-days="0">Stop featuring</button></div></div>`).join(""):none("No featured venues right now.");
+  badge("subs-h",j.submissions);badge("rev-h",j.reviews);badge("cl-h",j.claims);badge("ed-h",j.edits);
+  if(!venues.length){try{venues=await fetch("/api/venues").then(r=>r.json())}catch(e){}}
 }
 $("f").addEventListener("submit",e=>{e.preventDefault();key=$("k").value.trim();load()});
-document.addEventListener("click",async e=>{const st=e.target.closest(".set");if(st){const r=await fetch(`/api/admin?id=${encodeURIComponent(st.dataset.id)}&status=${encodeURIComponent(st.dataset.status)}`,{method:"PATCH",headers:{"x-admin-key":key}});if(r.ok)load();else $("msg").textContent="Couldn't update that.";return}const b=e.target.closest(".del");if(!b)return;
-  const r=await fetch(`/api/admin?kind=${encodeURIComponent(b.dataset.kind)}&id=${encodeURIComponent(b.dataset.id)}`,{method:"DELETE",headers:{"x-admin-key":key}});
-  if(r.ok)load();else $("msg").textContent="Couldn't delete that.";});
+$("ff").addEventListener("submit",e=>e.preventDefault());
+$("fq").addEventListener("input",()=>{const q=$("fq").value.trim().toLowerCase();if(q.length<2){$("fres").innerHTML="";return}
+  $("fres").innerHTML=venues.filter(v=>(v.name+" "+(v.district||"")+" "+(v.postcode||"")).toLowerCase().includes(q)).slice(0,8).map(v=>`<div class="item"><p><b>${esc(v.name)}</b> <span class="meta">${esc(v.district||"")} ${esc(v.postcode||"")}</span></p><div class="act"><button class="ft" data-id="${esc(v.id)}" data-days="30">Feature 30 days</button><button class="ft" data-id="${esc(v.id)}" data-days="90">90 days</button><button class="ft" data-id="${esc(v.id)}" data-days="365">1 year</button></div></div>`).join("")||none("No matches.")});
+document.addEventListener("click",async e=>{
+  const st=e.target.closest(".set"),ft=e.target.closest(".ft"),d=e.target.closest(".del");
+  let url,method="PATCH";
+  if(st)url=`/api/admin?kind=${st.dataset.kind}&id=${encodeURIComponent(st.dataset.id)}&status=${st.dataset.status}`;
+  else if(ft)url=`/api/admin?kind=venue&id=${encodeURIComponent(ft.dataset.id)}&featured_days=${ft.dataset.days}`;
+  else if(d){if(!e.target.dataset.sure){e.target.dataset.sure=1;e.target.textContent="Tap again to delete";return}url=`/api/admin?kind=${d.dataset.kind}&id=${encodeURIComponent(d.dataset.id)}`;method="DELETE"}
+  else return;
+  const r=await fetch(url,{method,headers:{"x-admin-key":key}});
+  if(!r.ok){$("msg").textContent="Couldn't update that.";return}
+  if(ft){$("fq").value="";$("fres").innerHTML=""}
+  load();
+});
 if(key)load();
 }
 </script>

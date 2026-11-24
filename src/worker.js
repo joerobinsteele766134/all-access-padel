@@ -3,10 +3,13 @@ import * as submissions from "./api/submissions.js";
 import * as admin from "./api/admin.js";
 import * as venues from "./api/venues.js";
 import * as importer from "./api/import.js";
+import * as reviews from "./api/reviews.js";
+import * as claims from "./api/claims.js";
+import * as club from "./api/club.js";
 import { json } from "../lib/shared.js";
 import { seoRoute } from "./seo.js";
 
-const routes = { "/api/submissions": submissions, "/api/admin": admin, "/api/venues": venues, "/api/import": importer };
+const routes = { "/api/submissions": submissions, "/api/admin": admin, "/api/venues": venues, "/api/import": importer, "/api/reviews": reviews, "/api/claims": claims, "/api/club": club };
 
 export default {
   async fetch(request, env, ctx) {

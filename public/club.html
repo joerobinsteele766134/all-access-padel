@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<title>Manage your listing | All Access Padel</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@1,900&family=Barlow:wght@400;700&display=swap">
+<style>
+:root{color-scheme:light dark;--bg:light-dark(#f3f1ea,#0a1430);--ink:light-dark(#0d1b3d,#eef1f8);--muted:light-dark(#4d5673,#a3adc8);--card:light-dark(#fff,#111f45);--line:light-dark(#0d1b3d,#2b3d6e)}
+*{box-sizing:border-box;min-width:0}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Barlow,system-ui,sans-serif}
+header{background:#0d1b3d;color:#fff;padding:16px max(5vw,16px)}header a{color:#fff;text-decoration:none;font:italic 900 26px "Barlow Condensed",sans-serif}header i{color:#e4ff3a;font-style:inherit}
+main{max-width:760px;margin:0 auto;padding:24px max(5vw,16px) 60px}
+h1{font:italic 900 40px/1 "Barlow Condensed",sans-serif;margin:0 0 8px}
+form{background:var(--card);border:2px solid var(--line);border-radius:4px;padding:18px;display:grid;gap:12px}
+label{font-weight:700;font-size:14px}.hint{color:var(--muted);font-size:13px;margin:2px 0 0;font-weight:400}
+input,textarea{width:100%;font:16px Barlow,sans-serif;min-height:44px;padding:8px 10px;border:2px solid var(--line);border-radius:4px;background:var(--bg);color:var(--ink)}textarea{min-height:100px}
+.fac{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:6px}.fac label{font-weight:500;display:flex;gap:8px;align-items:center}.fac input{width:auto;min-height:0}
+button{font:700 16px Barlow,sans-serif;min-height:46px;border:0;border-radius:6px;background:#e4ff3a;color:#0d1b3d;cursor:pointer;border:2px solid #0d1b3d}
+.msg{font-weight:700;min-height:1.4em}.note{background:#fff3c4;color:#5a4300;padding:10px 12px;border-radius:4px}
+</style>
+</head>
+<body>
+<header><a href="/">ALL ACCESS <i>PADEL</i></a></header>
+<main>
+  <h1 id="title">Manage your listing</h1>
+  <p class="msg" id="msg">Loading…</p>
+  <div id="wrap" hidden>
+    <p>Hi <span id="who"></span>. Update your venue's details below. Changes are checked by All Access Padel before they go live, usually within a day.</p>
+    <p class="note" id="pend" hidden></p>
+    <p><a id="view" target="_blank">See your public page</a></p>
+    <form id="f">
+      <div><label for="about">About your venue</label><textarea id="about" maxlength="600"></textarea><p class="hint">Two or three sentences: courts, atmosphere and what makes you different.</p></div>
+      <div><label for="courts">Courts</label><input id="courts" maxlength="60" placeholder="e.g. 4 indoor, 2 outdoor covered"></div>
+      <div><label for="hours">Opening hours</label><input id="hours" maxlength="120" placeholder="e.g. 7am–10pm weekdays, 8am–8pm weekends"></div>
+      <div><label for="price">Court price</label><input id="price" maxlength="80" placeholder="e.g. £24–£40 per court/hr"></div>
+      <div><label for="price_note">Price details</label><input id="price_note" maxlength="200" placeholder="e.g. Off-peak weekdays before 5pm. Members save 20%."></div>
+      <div><label for="deal">Current offer</label><input id="deal" maxlength="300" placeholder="e.g. Free intro session every Saturday at 10am"><p class="hint">Shown on the deals board. Clear it when the offer ends.</p></div>
+      <div><label>Facilities</label><div class="fac" id="fac"></div></div>
+      <div><label for="url">Website</label><input id="url" maxlength="300" placeholder="https://"></div>
+      <div><label for="book_url">Booking page</label><input id="book_url" maxlength="300" placeholder="https:// (Playtomic, MATCHi, ClubSpark…)"></div>
+      <div><label for="tel">Phone</label><input id="tel" maxlength="40"></div>
+      <div><label for="email">Public email</label><input id="email" maxlength="120"></div>
+      <button type="submit">Send changes for approval</button>
+      <p class="msg" id="sent" role="status"></p>
+    </form>
+  </div>
+</main>
+<script>
+{
+const $=id=>document.getElementById(id);
+const token=location.hash.slice(1);
+const LABELS={parking:"Parking",changing:"Changing rooms",cafe:"Café",bar:"Bar",racket_hire:"Racket hire",floodlit:"Floodlit",open_late:"Open late",accessible:"Step-free access",shop:"Shop",coaching:"Coaching"};
+const F=["about","courts","hours","price","price_note","deal","url","book_url","tel","email"];
+(async()=>{
+  if(token.length<30){$("msg").textContent="This link isn't complete. Check you copied the whole link.";return}
+  const r=await fetch("/api/club",{headers:{"x-club-token":token}});const j=await r.json().catch(()=>({}));
+  if(!r.ok){$("msg").textContent=j.error||"Couldn't load your listing.";return}
+  const v=j.venue;$("msg").textContent="";$("wrap").hidden=false;
+  $("title").textContent=v.name;$("who").textContent=j.contact;$("view").href="/venues/"+encodeURIComponent(v.id);
+  if(j.pending){$("pend").hidden=false;$("pend").textContent=`You have ${j.pending} change${j.pending>1?"s":""} waiting for approval.`}
+  F.forEach(k=>$(k).value=v[k]||"");
+  const on=(v.facilities||"").split(",");
+  $("fac").innerHTML=j.facilities.map(f=>`<label><input type="checkbox" value="${f}"${on.includes(f)?" checked":""}> ${LABELS[f]||f}</label>`).join("");
+})();
+$("f").addEventListener("submit",async e=>{
+  e.preventDefault();$("sent").textContent="Sending…";
+  const body={facilities:[...document.querySelectorAll("#fac input:checked")].map(i=>i.value)};F.forEach(k=>body[k]=$(k).value.trim());
+  const r=await fetch("/api/club",{method:"POST",headers:{"content-type":"application/json","x-club-token":token},body:JSON.stringify(body)});
+  const j=await r.json().catch(()=>({}));
+  $("sent").textContent=r.ok?"Thanks! Your changes have been sent for approval.":(j.error||"Something went wrong.");
+});
+}
+</script>
+</body>
+</html>

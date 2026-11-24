@@ -46,7 +46,18 @@ CREATE TABLE IF NOT EXISTS venues (
   flag TEXT,
   source TEXT,
   updated INTEGER,
-  book_url TEXT
+  book_url TEXT,
+  hours TEXT,
+  facilities TEXT,
+  featured_until INTEGER,
+  claimed INTEGER DEFAULT 0
 );
 CREATE INDEX IF NOT EXISTS idx_venues_latlng ON venues (lat, lng);
 CREATE TABLE IF NOT EXISTS import_tokens (token TEXT PRIMARY KEY, created INTEGER);
+CREATE TABLE IF NOT EXISTS reviews (id TEXT PRIMARY KEY, venue_id TEXT NOT NULL, rating INTEGER NOT NULL, title TEXT, body TEXT NOT NULL, name TEXT NOT NULL, status TEXT DEFAULT 'pending', ip TEXT, created INTEGER NOT NULL);
+CREATE INDEX IF NOT EXISTS idx_reviews_venue ON reviews (venue_id, status);
+CREATE INDEX IF NOT EXISTS idx_reviews_ip ON reviews (ip, created);
+CREATE TABLE IF NOT EXISTS claims (id TEXT PRIMARY KEY, venue_id TEXT NOT NULL, name TEXT NOT NULL, role TEXT, email TEXT NOT NULL, phone TEXT, message TEXT, status TEXT DEFAULT 'pending', token TEXT, ip TEXT, created INTEGER NOT NULL);
+CREATE INDEX IF NOT EXISTS idx_claims_token ON claims (token);
+CREATE INDEX IF NOT EXISTS idx_claims_ip ON claims (ip, created);
+CREATE TABLE IF NOT EXISTS venue_edits (id TEXT PRIMARY KEY, venue_id TEXT NOT NULL, claim_id TEXT, data TEXT NOT NULL, status TEXT DEFAULT 'pending', created INTEGER NOT NULL);
