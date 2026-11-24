@@ -14,8 +14,7 @@ export async function onRequestGet({ request, env }) {
   const no = needDb(env); if (no) return no;
   if (!(await authorised(request, env))) return json({ error: "Wrong admin key." }, 401);
   const subs = await env.DB.prepare("SELECT id, type, venue, details, contact, created FROM submissions ORDER BY created DESC LIMIT 200").all();
-  const posts = await env.DB.prepare("SELECT id, venue, date, time, level, need, contact, created FROM fourths ORDER BY date, time LIMIT 200").all();
-  return json({ submissions: subs.results, fourths: posts.results });
+  return json({ submissions: subs.results });
 }
 
 export async function onRequestDelete({ request, env }) {
@@ -23,7 +22,7 @@ export async function onRequestDelete({ request, env }) {
   if (!(await authorised(request, env))) return json({ error: "Wrong admin key." }, 401);
   const u = new URL(request.url);
   const kind = u.searchParams.get("kind"), id = u.searchParams.get("id") || "";
-  const table = kind === "submission" ? "submissions" : kind === "fourth" ? "fourths" : null;
+  const table = kind === "submission" ? "submissions" : null;
   if (!table || !id) return json({ error: "Missing details." }, 400);
   await env.DB.prepare(`DELETE FROM ${table} WHERE id = ?`).bind(id).run();
   return json({ ok: true });

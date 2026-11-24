@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>All Access Padel</title>
-<meta name="description" content="Find padel courts near you anywhere in Britain, with prices, deals and a find-a-4th board.">
+<meta name="description" content="Find padel courts near you anywhere in Britain, with prices, deals and booking links.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@1,700;1,800;1,900&family=Barlow:wght@400;500;700&display=swap">
 <style>
@@ -12,7 +12,7 @@
    IDEA: a club scoreboard / match ticket. Venues are tickets, deals are a notice board.
    PICTURE: racket logo with AA cut-outs over a court-blue band with a ball-yellow slash; a live map of courts around you.
    COLOUR and TYPE: navy #0d1b3d, ball yellow #e4ff3a, court blue #2457d6, chalk. Barlow Condensed italic 900 + Barlow.
-   LAYOUT: sticky nav, hero, courts grid with search, map, find-a-fourth board, guide, deals board, add-a-court form, footer. */
+   LAYOUT: sticky nav, hero, courts grid with search, map, guide, deals board, add-a-court form, footer. */
 :root{color-scheme:light dark;
 --bg:light-dark(#f3f1ea,#0a1430);--ink:light-dark(#0d1b3d,#eef1f8);--muted:light-dark(#4d5673,#a3adc8);
 --card:light-dark(#ffffff,#111f45);--line:light-dark(#0d1b3d,#2b3d6e);--soft:light-dark(#e7e4d8,#16285a);
@@ -169,7 +169,7 @@ footer p{max-width:75ch;margin:0 0 8px}
 <nav>
   <div class="wrap">
     <a class="brand" href="#top" aria-label="All Access Padel home"><svg><use href="#logo"/></svg><b>ALL ACCESS <i>PADEL</i></b></a>
-    <div class="links"><a href="#courts">Courts</a><a href="#map">Map</a><a href="#fourth">Find a 4th</a><a href="#guide">New to padel</a><a href="#deals">Deals</a><a href="#add">Add a court</a></div>
+    <div class="links"><a href="#courts">Courts</a><a href="#map">Map</a><a href="#guide">New to padel</a><a href="#deals">Deals</a><a href="#add">Add a court</a></div>
   </div>
 </nav>
 
@@ -177,9 +177,9 @@ footer p{max-width:75ch;margin:0 0 8px}
   <div class="wrap">
     <div>
       <h1 class="disp"><span>All Access</span><span class="y">Padel</span></h1>
-      <p class="lede">Every padel court in Britain, nearest first. Find one near you, see what it costs, and get a game sorted.</p>
+      <p class="lede">Every padel court in Britain, nearest first. Find one near you, see what it costs, and check when you can play.</p>
       <div class="loc"><span>Distances from <b id="locName">Witney</b></span><button type="button" id="locChange">Change</button></div>
-      <div class="cta"><a class="btn y" href="#courts">Find a court</a><a class="btn o" href="#fourth">Find a 4th</a></div>
+      <div class="cta"><a class="btn y" href="#courts">Find a court</a><a class="btn o" href="#map">See the map</a></div>
     </div>
     <svg class="mark" viewBox="0 0 300 300" aria-hidden="true"><g class="spin"><use href="#logo"/></g></svg>
   </div>
@@ -210,29 +210,6 @@ footer p{max-width:75ch;margin:0 0 8px}
   </div>
 </section>
 
-<section class="band alt" id="fourth">
-  <div class="wrap">
-    <h2 class="disp">Find a 4th</h2>
-    <p class="sub">Got a court booked but you're short of players? Post it here. Spotted a game that fits? Get in touch using the contact details on the post. Posts come down after the game date.</p>
-    <div class="two">
-      <form class="panel" id="fForm" style="position:relative">
-        <div class="fgrid">
-          <div class="full"><label for="fVenue">Where</label><select id="fVenue" required></select></div>
-          <div><label for="fDate">Date</label><input id="fDate" type="date" required></div>
-          <div><label for="fTime">Time</label><input id="fTime" type="time" required></div>
-          <div><label for="fLevel">Level</label><select id="fLevel"><option>Beginner</option><option selected>Improver</option><option>Intermediate</option><option>Advanced</option><option>Any level</option></select></div>
-          <div><label for="fNeed">Players needed</label><select id="fNeed"><option>1</option><option>2</option><option>3</option></select></div>
-          <div class="full"><label for="fContact">How to reach you</label><input id="fContact" maxlength="120" placeholder="First name and a WhatsApp number or Instagram" required><p class="hint">Anyone who can see this page will see this, so only share what you're happy with.</p></div>
-        </div>
-        <input id="fHp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px">
-        <button class="btn b" type="submit" style="margin-top:14px;width:100%">Post my game</button>
-        <p class="status" id="fStatus" role="status"></p>
-      </form>
-      <div><div class="posts" id="posts"><div class="empty">Loading games…</div></div></div>
-    </div>
-  </div>
-</section>
-
 <section class="band" id="guide">
   <div class="wrap">
     <h2 class="disp">Never played? Start here</h2>
@@ -243,7 +220,7 @@ footer p{max-width:75ch;margin:0 0 8px}
       <div class="step"><h3>Serve underarm</h3><p>Bounce the ball and hit it below waist height, diagonally into the box opposite. The scoring is the same as tennis: 15, 30, 40, game.</p></div>
       <div class="step"><h3>What to bring</h3><p>Trainers with a flat, grippy sole (court or tennis shoes are best, not running shoes) and comfy sportswear. Most venues hire out rackets, and you'll need a tube of balls.</p></div>
       <div class="step"><h3>Your first session</h3><p>Book a free or cheap intro session (see the deals board below). A coach will show you the basics, and you'll meet other beginners to play with.</p></div>
-      <div class="step"><h3>Finding a game</h3><p>Most clubs run socials and "Americanos", where you rotate partners. They're the easiest way to play without bringing three mates. Or use Find a 4th above.</p></div>
+      <div class="step"><h3>Finding a game</h3><p>Most clubs run socials and "Americanos", where you rotate partners. They're the easiest way to play without bringing three mates.</p></div>
     </div>
   </div>
 </section>
@@ -289,7 +266,7 @@ footer p{max-width:75ch;margin:0 0 8px}
       <p><b style="color:#fff">All Access Padel</b> · Padel courts across Britain</p>
       <p>Distances are in a straight line from your postcode, so the drive will be a bit further. Court details for Witney Lakes and Estelle Manor come from a directory listing, so give them a call first. Prices and offers change, so check with the venue before you go.</p>
       <p>Venue list built from the LTA's padel court finder, plus local research. Prices are taken from venues' own published rates where we could find them, and change often.</p>
-      <p>We're independent and not connected to any of the venues listed. Games you post are shown publicly until the game date, then deleted. Your location stays in your browser and is never sent to us.</p>
+      <p>We're independent and not connected to any of the venues listed. Your location stays in your browser and is never sent to us.</p>
     </div>
   </div>
 </footer>
@@ -417,43 +394,14 @@ $("near").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)
 const mapRO=new ResizeObserver(drawMap);mapRO.observe(fig);
 
 function populate(){
-const near=withD().slice(0,40);
-$("fVenue").innerHTML=near.map(v=>`<option value="${esc(v.id)}">${esc(v.n)} (${v.d<1?"<1":Math.round(v.d)} mi)</option>`).join("")+`<option value="other">Somewhere else</option>`;
 const deals=withD().filter(v=>v.deal).slice(0,12);
 $("dealslist").innerHTML=deals.length?deals.map(v=>`<li><strong>${esc(v.n)}</strong><span>${esc(v.deal)}</span></li>`).join(""):`<li><strong>No deals near you yet</strong><span>Spotted one? Send it in below.</span></li>`;
 }
 /* deals */
 $("dealslist").innerHTML=V.filter(v=>v.deal).map(v=>`<li><strong>${esc(v.n)}</strong><span>${esc(v.deal)}</span></li>`).join("");
 
-/* find a fourth + submissions (shared data) */
-const today=new Date().toISOString().slice(0,10);$("fDate").min=today;$("fDate").value=today;$("fTime").value="19:00";
-let myPosts={};try{myPosts=JSON.parse(localStorage.getItem("aap-posts")||"{}")}catch(e){}
-const saveMine=()=>{try{localStorage.setItem("aap-posts",JSON.stringify(myPosts))}catch(e){}};
-async function loadPosts(){
-  try{const r=await fetch("/api/fourths");if(!r.ok)throw 0;renderPosts(await r.json())}
-  catch(e){$("posts").innerHTML=`<div class="empty">Couldn't load games right now. Try again in a minute.</div>`}
-}
-function renderPosts(list){
-  if(!Array.isArray(list)||!list.length){$("posts").innerHTML=`<div class="empty">No games posted yet. Be the first. Post yours on the left.</div>`;return}
-  $("posts").innerHTML=list.map(p=>{const v=V.find(x=>x.id===p.venue);const d=new Date(p.date+"T00:00");
-    const day=isNaN(d)?esc(p.date):d.toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"});
-    const mine=!!myPosts[p.id];
-    return `<div class="post"><div class="when">${day} · ${esc(p.time||"")}</div>
-      <p><b>${esc(v?v.n:"Somewhere else")}</b></p>
-      <p><span class="need">Need ${esc(p.need||"1")}</span>${esc(p.level||"")}</p>
-      <p>${esc(p.contact||"")}</p>
-      ${mine?`<button class="del" type="button" data-id="${esc(p.id)}">Remove my post</button>`:""}</div>`}).join("");
-}
-$("posts").addEventListener("click",async e=>{const b=e.target.closest(".del");if(!b)return;const id=b.dataset.id;
-  try{const r=await fetch("/api/fourths?id="+encodeURIComponent(id)+"&token="+encodeURIComponent(myPosts[id]||""),{method:"DELETE"});if(!r.ok)throw 0;delete myPosts[id];saveMine();loadPosts()}
-  catch(err){$("fStatus").textContent="Couldn't remove that one. Try again."}});
+/* submissions */
 const post=async(url,body)=>{const r=await fetch(url,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(body)});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||"Something went wrong");return j};
-$("fForm").addEventListener("submit",async e=>{
-  e.preventDefault();$("fStatus").textContent="Posting…";
-  try{const j=await post("/api/fourths",{venue:$("fVenue").value,date:$("fDate").value,time:$("fTime").value,level:$("fLevel").value,need:$("fNeed").value,contact:$("fContact").value,website:$("fHp").value});
-    myPosts[j.id]=j.token;saveMine();$("fStatus").textContent="You're on the board. It comes down after the game date.";e.target.reset();$("fDate").value=today;$("fTime").value="19:00";loadPosts()}
-  catch(err){$("fStatus").textContent=err.message}
-});
 $("sForm").addEventListener("submit",async e=>{
   e.preventDefault();$("sStatus").textContent="Sending…";
   try{await post("/api/submissions",{type:$("sType").value,venue:$("sVenue").value,details:$("sDetails").value,contact:$("sContact").value,website:$("sHp").value});
@@ -461,7 +409,7 @@ $("sForm").addEventListener("submit",async e=>{
   catch(err){$("sStatus").textContent=err.message}
 });
 function refresh(){$("locName").textContent=me.name;if(V.length)populate();renderCourts();drawMap()}
-fetch("/api/venues?v=3").then(r=>r.json()).then(d=>{V=(Array.isArray(d)?d:[]).map(r=>{const t=(r.tags||"").split(",").map(s=>s.trim()).filter(Boolean);const c=(r.courts||"").toLowerCase();if(c.includes("indoor"))t.push("indoor");if(c.includes("covered"))t.push("covered");if(c.split(",").some(x=>x.trim()==="outdoor"))t.push("outdoor");if(r.price)t.push("price");if(r.deal)t.push("deal");if(r.lta)t.push("lta");if(r.book_url)t.push("book");return{id:r.id,n:r.name,a:[r.district,r.postcode].filter(Boolean).join(" · "),pc:r.postcode,lat:+r.lat,lng:+r.lng,courts:r.courts,lta:!!r.lta,url:r.url,email:r.email,tel:r.tel,about:r.about,deal:r.deal,price:r.price,price_note:r.price_note,pick:!!r.pick,flag:r.flag,book:r.book_url,t}}).filter(v=>isFinite(v.lat)&&isFinite(v.lng));refresh();loadPosts()}).catch(()=>{$("grid").innerHTML=`<div class="empty">Couldn't load the court list. Refresh to try again.</div>`});
+fetch("/api/venues?v=3").then(r=>r.json()).then(d=>{V=(Array.isArray(d)?d:[]).map(r=>{const t=(r.tags||"").split(",").map(s=>s.trim()).filter(Boolean);const c=(r.courts||"").toLowerCase();if(c.includes("indoor"))t.push("indoor");if(c.includes("covered"))t.push("covered");if(c.split(",").some(x=>x.trim()==="outdoor"))t.push("outdoor");if(r.price)t.push("price");if(r.deal)t.push("deal");if(r.lta)t.push("lta");if(r.book_url)t.push("book");return{id:r.id,n:r.name,a:[r.district,r.postcode].filter(Boolean).join(" · "),pc:r.postcode,lat:+r.lat,lng:+r.lng,courts:r.courts,lta:!!r.lta,url:r.url,email:r.email,tel:r.tel,about:r.about,deal:r.deal,price:r.price,price_note:r.price_note,pick:!!r.pick,flag:r.flag,book:r.book_url,t}}).filter(v=>isFinite(v.lat)&&isFinite(v.lng));refresh()}).catch(()=>{$("grid").innerHTML=`<div class="empty">Couldn't load the court list. Refresh to try again.</div>`});
 let asked=false;try{asked=!!localStorage.getItem("aap-loc")}catch(e){}
 if(!asked)openModal();
 }

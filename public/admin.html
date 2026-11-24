@@ -30,7 +30,6 @@ button.del{background:transparent;color:var(--muted);text-decoration:underline;m
   <p class="msg" id="msg"></p>
   <div id="out" hidden>
     <h2>Submissions</h2><div id="subs"></div>
-    <h2>Find a 4th posts</h2><div id="posts"></div>
   </div>
 </main>
 <script>
@@ -46,7 +45,6 @@ async function load(){
   try{sessionStorage.setItem("aap-admin",key)}catch(e){}
   $("msg").textContent="";$("out").hidden=false;
   $("subs").innerHTML=j.submissions.length?j.submissions.map(s=>`<div class="item"><p><b>${esc(s.type)}</b> · ${esc(s.venue)}</p><p>${esc(s.details)}</p><p class="meta">${esc(s.contact)} ${s.contact?"·":""} ${when(s.created)}</p><button class="del" data-kind="submission" data-id="${esc(s.id)}">Delete</button></div>`).join(""):"<p class='meta'>Nothing sent in yet.</p>";
-  $("posts").innerHTML=j.fourths.length?j.fourths.map(p=>`<div class="item"><p><b>${esc(p.date)} ${esc(p.time)}</b> · ${esc(p.venue)} · need ${esc(p.need)} · ${esc(p.level)}</p><p>${esc(p.contact)}</p><button class="del" data-kind="fourth" data-id="${esc(p.id)}">Remove post</button></div>`).join(""):"<p class='meta'>No live posts.</p>";
 }
 $("f").addEventListener("submit",e=>{e.preventDefault();key=$("k").value.trim();load()});
 document.addEventListener("click",async e=>{const b=e.target.closest(".del");if(!b)return;
