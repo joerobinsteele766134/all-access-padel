@@ -6,10 +6,11 @@ import * as importer from "./api/import.js";
 import * as reviews from "./api/reviews.js";
 import * as claims from "./api/claims.js";
 import * as club from "./api/club.js";
+import * as news from "./api/news.js";
 import { json } from "../lib/shared.js";
 import { seoRoute } from "./seo.js";
 
-const routes = { "/api/submissions": submissions, "/api/admin": admin, "/api/venues": venues, "/api/import": importer, "/api/reviews": reviews, "/api/claims": claims, "/api/club": club };
+const routes = { "/api/submissions": submissions, "/api/admin": admin, "/api/venues": venues, "/api/import": importer, "/api/reviews": reviews, "/api/claims": claims, "/api/club": club, "/api/news": news };
 
 export default {
   async fetch(request, env, ctx) {

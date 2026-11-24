@@ -2,6 +2,7 @@
 // /venues/:id, /padel-courts, /padel-courts/:area, /sitemap.xml, /llms.txt
 import { GUIDES } from "./guides.js";
 import { KIT, kitBody } from "./kit.js";
+import { latestNews, newsBody, newsRss, newsCard, NEWS_CSS, KINDS } from "./news.js";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 export const slug = s => String(s || "").toLowerCase().normalize("NFKD").replace(/&/g, " and ").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 const miles = (a, b, c, d) => { const R = 3959, r = x => x * Math.PI / 180, dl = r(c - a), dg = r(d - b), h = Math.sin(dl / 2) ** 2 + Math.cos(r(a)) * Math.cos(r(c)) * Math.sin(dg / 2) ** 2; return 2 * R * Math.asin(Math.sqrt(h)); };
@@ -23,7 +24,7 @@ const page = ({ origin, path, title, description, body, jsonld = [] }) => `<!DOC
 <html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(description)}">
-<link rel="canonical" href="${origin}${path}">
+<link rel="canonical" href="${origin}${path}"><link rel="alternate" type="application/rss+xml" title="UK padel news" href="/news.xml">
 <meta property="og:type" content="website"><meta property="og:site_name" content="All Access Padel">
 <meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(description)}"><meta property="og:url" content="${origin}${path}">
 <meta name="twitter:card" content="summary">
@@ -62,7 +63,7 @@ ${jsonld.map(j => `<script type="application/ld+json">${JSON.stringify(j).replac
 </head><body>
 <header><a href="/">ALL ACCESS <i>PADEL</i></a></header>
 <main>${body}</main>
-<footer><p><a href="/">Find padel courts near you</a> · <a href="/padel-courts">Padel courts by area</a> · <a href="/guides">Guides</a> · <a href="/kit">Kit shop</a></p>
+<footer><p><a href="/">Find padel courts near you</a> · <a href="/padel-courts">Padel courts by area</a> · <a href="/guides">Guides</a> · <a href="/kit">Kit shop</a> · <a href="/news">News</a></p>
 <p>Venue list built from the LTA's padel court finder plus our own research. Prices change often, so check with the venue before you go. All Access Padel is independent and not connected to the venues listed.</p></footer>
 </body></html>`;
 
@@ -231,7 +232,7 @@ export async function seoRoute(request, env) {
   const url = new URL(request.url), p = url.pathname.replace(/\/+$/, "") || "/", origin = url.origin;
   if (p === "/rules" || p === "/padel-rules") return Response.redirect(`${origin}/guides/padel-rules`, 301);
   if (p === "/shop") return Response.redirect(`${origin}/kit`, 301);
-  if (!(p === "/padel-courts" || p.startsWith("/padel-courts/") || p.startsWith("/venues/") || p === "/guides" || p.startsWith("/guides/") || p === "/kit" || p === "/sitemap.xml" || p === "/llms.txt" || p === "/robots.txt")) return null;
+  if (!(p === "/padel-courts" || p.startsWith("/padel-courts/") || p.startsWith("/venues/") || p === "/guides" || p.startsWith("/guides/") || p === "/kit" || p === "/news" || p === "/news.xml" || p === "/sitemap.xml" || p === "/llms.txt" || p === "/robots.txt")) return null;
   if (p === "/robots.txt") return new Response(`# All Access Padel welcomes search engines and AI assistants.
 User-agent: *
 Allow: /
@@ -264,7 +265,7 @@ Sitemap: ${origin}/sitemap.xml
   const areas = areaGroups(all);
 
   if (p === "/sitemap.xml") {
-    const urls = [`${origin}/`, `${origin}/padel-courts`, `${origin}/guides`, `${origin}/kit`, ...GUIDES.map(g => `${origin}/guides/${g.slug}`), ...areas.map(a => `${origin}/padel-courts/${a.slug}`), ...all.map(v => `${origin}/venues/${v.id}`)];
+    const urls = [`${origin}/`, `${origin}/padel-courts`, `${origin}/guides`, `${origin}/kit`, `${origin}/news`, ...GUIDES.map(g => `${origin}/guides/${g.slug}`), ...areas.map(a => `${origin}/padel-courts/${a.slug}`), ...all.map(v => `${origin}/venues/${v.id}`)];
     const body = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(u => `<url><loc>${esc(u)}</loc></url>`).join("\n")}\n</urlset>`;
     return new Response(body, { headers: { "content-type": "application/xml", "cache-control": "public, max-age=3600" } });
   }
@@ -281,6 +282,7 @@ The venue list is built from the LTA's padel court finder plus our own research.
 - [Sitemap](${origin}/sitemap.xml): every venue and area page
 
 ## Kit shop
+- [UK padel news](${origin}/news): new padel clubs opening, planning decisions and padel news, summarised with links to the source
 - [Padel kit shop](${origin}/kit): recommended rackets, balls, shoes, bags and accessories, with links to Amazon UK
 
 ## Guides
@@ -293,6 +295,16 @@ ${areas.map(a => `- [Padel courts in ${a.name}](${origin}/padel-courts/${a.slug}
   }
   if (p === "/padel-courts") return html(indexPage(origin, areas, all.length));
   if (p === "/guides") return html(guidesIndex(origin));
+  if (p === "/news" || p === "/news.xml") {
+    const items = await latestNews(env, 200);
+    if (p === "/news.xml") return new Response(newsRss(origin, items, esc), { headers: { "content-type": "application/rss+xml; charset=utf-8", "cache-control": "public, max-age=900" } });
+    const kind = new URL(request.url).searchParams.get("type") || "";
+    return html(page({ origin, path: "/news", title: "UK padel news: new clubs, openings and planning | All Access Padel",
+      description: "The latest UK padel news: new padel clubs opening, courts approved in planning and the biggest stories from around Britain.",
+      body: newsBody(items, esc, KINDS[kind] ? kind : ""),
+      jsonld: [{ "@context": "https://schema.org", "@type": "CollectionPage", name: "UK padel news", url: `${origin}/news` },
+        { "@context": "https://schema.org", "@type": "ItemList", itemListElement: items.slice(0, 30).map((n, i) => ({ "@type": "ListItem", position: i + 1, name: n.title, url: n.venue_id ? `${origin}/venues/${n.venue_id}` : n.url })) }] }), 900);
+  }
   if (p === "/kit") return html(page({ origin, path: "/kit", title: "Padel kit shop: best rackets, balls & shoes (UK) | All Access Padel",
     description: "The padel rackets, balls, shoes, bags and accessories UK experts recommend, from beginner to advanced. See live prices on Amazon UK.",
     body: kitBody(esc, env.AMAZON_TAG || ""),
@@ -309,7 +321,9 @@ ${areas.map(a => `- [Padel courts in ${a.name}](${origin}/padel-courts/${a.slug}
     const v = all.find(x => x.id === decodeURIComponent(p.slice(8)));
     if (!v) return null;
     const { results: reviews } = await env.DB.prepare("SELECT rating, title, body, name, created FROM reviews WHERE venue_id = ? AND status = 'approved' ORDER BY created DESC LIMIT 50").bind(v.id).all();
-    return html(venuePage(origin, v, all, reviews), 300);
+    const vnews = await latestNews(env, 5, v.id);
+    const out = venuePage(origin, v, all, reviews);
+    return html(vnews.length ? out.replace("</main>", `${NEWS_CSS}<h2>In the news</h2>${vnews.map(n => newsCard(n, esc)).join("")}</main>`) : out, 300);
   }
   return null;
 }

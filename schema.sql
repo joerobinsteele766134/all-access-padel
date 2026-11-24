@@ -61,3 +61,7 @@ CREATE TABLE IF NOT EXISTS claims (id TEXT PRIMARY KEY, venue_id TEXT NOT NULL, 
 CREATE INDEX IF NOT EXISTS idx_claims_token ON claims (token);
 CREATE INDEX IF NOT EXISTS idx_claims_ip ON claims (ip, created);
 CREATE TABLE IF NOT EXISTS venue_edits (id TEXT PRIMARY KEY, venue_id TEXT NOT NULL, claim_id TEXT, data TEXT NOT NULL, status TEXT DEFAULT 'pending', created INTEGER NOT NULL);
+
+-- UK padel news: our own short summaries linking to the original story
+CREATE TABLE IF NOT EXISTS news (id TEXT PRIMARY KEY, title TEXT NOT NULL, summary TEXT NOT NULL, url TEXT NOT NULL, source TEXT NOT NULL, published TEXT NOT NULL, kind TEXT DEFAULT 'news', area TEXT, venue_id TEXT, status TEXT DEFAULT 'live', created INTEGER);
+CREATE INDEX IF NOT EXISTS news_pub ON news(status, published);
