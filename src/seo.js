@@ -5,7 +5,7 @@ export const slug = s => String(s || "").toLowerCase().normalize("NFKD").replace
 const miles = (a, b, c, d) => { const R = 3959, r = x => x * Math.PI / 180, dl = r(c - a), dg = r(d - b), h = Math.sin(dl / 2) ** 2 + Math.cos(r(a)) * Math.cos(r(c)) * Math.sin(dg / 2) ** 2; return 2 * R * Math.asin(Math.sqrt(h)); };
 const httpsUrl = u => { u = String(u || "").trim(); if (!u || /\s|@/.test(u) || !u.includes(".")) return ""; return /^https?:\/\//i.test(u) ? u.replace(/^http:/i, "https:") : "https://" + u; };
 const appOf = u => { const h = (u || "").toLowerCase(); return h.includes("playtomic") ? "Playtomic" : h.includes("matchi") ? "MATCHi" : h.includes("nettla") ? "Nettla" : (h.includes("clubspark") || h.includes("lta.org.uk")) ? "ClubSpark" : "the booking page"; };
-const YEAR = new Date().getFullYear();
+const year = () => new Date().getFullYear();
 
 async function allVenues(env) {
   const { results } = await env.DB.prepare(
@@ -116,7 +116,7 @@ function areaPage(origin, a, all) {
   const others = all.filter(v => slug(v.district) !== a.slug).map(v => ({ ...v, d: miles(c.lat, c.lng, v.lat, v.lng) })).sort((x, y) => x.d - y.d).slice(0, 8);
   const priced = a.venues.filter(v => v.price).length, indoor = a.venues.filter(v => /indoor|covered/i.test(v.courts || "")).length;
   const n = a.venues.length;
-  const title = `Padel courts in ${a.name} (${n} venue${n === 1 ? "" : "s"}, ${YEAR}) | All Access Padel`;
+  const title = `Padel courts in ${a.name} (${n} venue${n === 1 ? "" : "s"}, ${year()}) | All Access Padel`;
   const description = `There ${n === 1 ? "is 1 padel venue" : `are ${n} padel venues`} in ${a.name}${indoor ? `, ${indoor} with indoor or covered courts` : ""}. See locations, court types, prices and booking links.`;
   const faq = { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: [
     { "@type": "Question", name: `How many padel courts are there in ${a.name}?`, acceptedAnswer: { "@type": "Answer", text: `We list ${n} padel venue${n === 1 ? "" : "s"} in ${a.name}: ${a.venues.map(v => v.name).join(", ")}.` } },
