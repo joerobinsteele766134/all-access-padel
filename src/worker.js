@@ -1,0 +1,23 @@
+// Worker entry: serves /api/* and hands everything else to the static site in /public.
+import * as fourths from "./api/fourths.js";
+import * as submissions from "./api/submissions.js";
+import * as admin from "./api/admin.js";
+import { json } from "../lib/shared.js";
+
+const routes = { "/api/fourths": fourths, "/api/submissions": submissions, "/api/admin": admin };
+
+export default {
+  async fetch(request, env, ctx) {
+    const url = new URL(request.url);
+    const mod = routes[url.pathname];
+    if (mod) {
+      const name = "onRequest" + request.method.charAt(0) + request.method.slice(1).toLowerCase();
+      const handler = mod[name];
+      if (!handler) return json({ error: "Method not allowed" }, 405);
+      try { return await handler({ request, env, ctx }); }
+      catch (e) { console.error(e); return json({ error: "Something went wrong. Try again in a minute." }, 500); }
+    }
+    if (url.pathname.startsWith("/api/")) return json({ error: "Not found" }, 404);
+    return env.ASSETS.fetch(request);
+  },
+};

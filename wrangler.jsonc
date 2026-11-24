@@ -1,0 +1,19 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "all-access-padel",
+  "main": "src/worker.js",
+  "compatibility_date": "2025-09-01",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "not_found_handling": "404-page"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "aap-db",
+      "database_id": "59c6f002-d9e9-4e15-9e73-721cb51ff370"
+    }
+  ],
+  "observability": { "enabled": true }
+}
