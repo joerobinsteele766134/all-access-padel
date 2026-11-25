@@ -22,6 +22,7 @@ export function outreachEmail(clubs, optoutUrl) {
 <p>Two quick things that bring you more bookings, both free:</p>
 <ol style="padding-left:18px"><li><b>Claim your listing.</b> Tap "Claim this venue" on your page and you'll get a private link to add your prices, opening hours, facilities, offers and booking link. Players filter by these, so complete listings get far more clicks.</li>
 <li><b>Add our badge to your website.</b> It takes a minute at <a href="${SITE}/for-clubs" style="color:#2457d6">allaccesspadel.co.uk/for-clubs</a>. It shows players your reviews and helps your page show up in Google.</li></ol>
+<p style="background:#eef7e6;border-radius:8px;padding:10px 14px"><b>It's completely free for clubs.</b> No fees, no commission, no contract, and there's nothing to sign up for. Your listing stays up whether or not you claim it.</p>
 <p>If anything on your listing is wrong, just reply and I'll fix it.</p>
 <p>Thanks, and see you on court,<br>Joe Steele<br>All Access Padel, Witney, Oxfordshire<br><a href="${SITE}" style="color:#2457d6">allaccesspadel.co.uk</a></p>
 <p style="font-size:12px;color:#4d5673;margin-top:24px">You're getting this one-off email because ${many ? "your clubs are" : "your club is"} listed on All Access Padel. If you'd rather not hear from us again, <a href="${optoutUrl}" style="color:#4d5673">click here</a> and we won't email you again.</p>
@@ -36,6 +37,8 @@ ${clubs.map(c => `- ${c.name}: ${SITE}/venues/${c.id}${c.missing && c.missing !=
 Two quick things that bring you more bookings, both free:
 1. Claim your listing. Tap "Claim this venue" on your page and you'll get a private link to add your prices, opening hours, facilities, offers and booking link.
 2. Add our badge to your website: ${SITE}/for-clubs
+
+It's completely free for clubs. No fees, no commission, no contract, and there's nothing to sign up for. Your listing stays up whether or not you claim it.
 
 If anything on your listing is wrong, just reply and I'll fix it.
 
