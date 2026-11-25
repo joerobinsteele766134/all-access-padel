@@ -35,7 +35,12 @@ const page = ({ origin, path, title, description, body, jsonld = [], robots = ""
 <style>
 :root{color-scheme:light dark;--bg:light-dark(#f3f1ea,#0a1430);--ink:light-dark(#0d1b3d,#eef1f8);--muted:light-dark(#4d5673,#a3adc8);--card:light-dark(#fff,#111f45);--line:light-dark(#0d1b3d,#2b3d6e);--navy:#0d1b3d;--ball:#e4ff3a;--court:#2457d6}
 *{box-sizing:border-box;min-width:0}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 Barlow,system-ui,sans-serif}
-header{background:var(--navy);padding:12px max(5vw,16px)}header a{color:#fff;text-decoration:none;font:italic 900 24px "Barlow Condensed",sans-serif}header a i{color:var(--ball);font-style:inherit}
+header{background:var(--navy);padding:8px max(5vw,16px);display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:20}header .logo{color:#fff;text-decoration:none;font:italic 900 24px "Barlow Condensed",sans-serif;flex:none}header .logo i{color:var(--ball);font-style:inherit}
+header nav{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;margin-left:auto;-webkit-mask-image:linear-gradient(90deg,#000 85%,transparent);mask-image:linear-gradient(90deg,#000 85%,transparent);padding-right:24px}header nav a{flex:none;color:#fff;text-decoration:none;font-weight:700;font-size:15px;padding:10px 10px;border-radius:6px}header nav a:hover{background:rgba(255,255,255,.1)}header nav a.k{background:var(--ball);color:var(--navy);padding:6px 10px;align-self:center}
+@media(min-width:900px){header nav{mask-image:none;-webkit-mask-image:none;padding-right:0}}
+.status:empty{display:none}main .facts{grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr))}@media(max-width:700px){main .facts{grid-template-columns:1fr 1fr}header .logo{font-size:19px}}
+.acts{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 18px}.acts .btn{min-height:48px}
+.actbar{display:none}@media(max-width:700px){.actbar{display:flex;gap:8px;position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--navy);padding:10px 12px calc(10px + env(safe-area-inset-bottom))}.actbar .btn{flex:1;justify-content:center;min-height:46px;font-size:15px}body.hasbar{padding-bottom:76px}}
 main{max-width:960px;margin:0 auto;padding:28px max(5vw,16px) 56px}
 h1{font:italic 900 clamp(36px,6vw,56px)/1 "Barlow Condensed",sans-serif;text-transform:uppercase;margin:0 0 12px}
 h2{font:italic 800 28px/1.1 "Barlow Condensed",sans-serif;margin:32px 0 10px}
@@ -64,7 +69,7 @@ footer{background:var(--navy);color:#c9d1e6;padding:24px max(5vw,16px);font-size
 </style>
 ${jsonld.map(j => `<script type="application/ld+json">${JSON.stringify(j).replace(/</g, "\\u003c")}</script>`).join("\n")}
 </head><body>
-<header><a href="/">ALL ACCESS <i>PADEL</i></a></header>
+<header><a class="logo" href="/">ALL ACCESS <i>PADEL</i></a><nav aria-label="Main"><a href="/#courts">Find courts</a><a href="/padel">Towns</a><a href="/padel-prices">Prices</a><a href="/guides">Guides</a><a href="/news">News</a><a class="k" href="/kit">Kit shop</a></nav></header>
 <main>${body}</main>
 <footer><p><a href="/">Find padel courts near you</a> · <a href="/padel">Padel by town</a> · <a href="/padel-prices">Padel prices</a> · <a href="/for-clubs">For clubs</a> · <a href="/padel-courts">Padel courts by area</a> · <a href="/guides">Guides</a> · <a href="/kit">Kit shop</a> · <a href="/news">News</a></p>
 <p>Venue list built from the LTA's padel court finder plus our own research. Prices change often, so check with the venue before you go. All Access Padel is independent and not connected to the venues listed.</p></footer>
@@ -120,6 +125,10 @@ function venuePage(origin, v, all, reviews = []) {
 <h1>${esc(v.name)}</h1>
 ${v.featured ? `<p><span class="featured">Featured venue</span></p>` : ""}
 ${reviews.length ? `<p><span class="stars" aria-label="${avg} out of 5">${stars(avg)}</span> <b>${avg}</b> from ${reviews.length} review${reviews.length === 1 ? "" : "s"} · <a href="#reviews">Read reviews</a></p>` : ""}
+${(() => { const dir = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent([v.name, v.postcode].filter(Boolean).join(" "))}`;
+  const tel = v.tel ? `tel:${String(v.tel).replace(/[^\d+]/g, "")}` : "";
+  return `<div class="acts">${book ? `<a class="btn y" href="${esc(book)}" rel="nofollow noopener" target="_blank">Check availability on ${esc(appOf(book))}</a>` : site ? `<a class="btn y" href="${esc(site)}" rel="nofollow noopener" target="_blank">Book on the venue's website</a>` : ""}<a class="btn" href="${esc(dir)}" rel="noopener" target="_blank">Get directions</a>${site && book && site !== book ? `<a class="btn" href="${esc(site)}" rel="nofollow noopener" target="_blank">Website</a>` : ""}${tel ? `<a class="btn" href="${esc(tel)}">Call</a>` : ""}</div>
+<div class="actbar">${book || site ? `<a class="btn y" href="${esc(book || site)}" rel="nofollow noopener" target="_blank">${book ? "Check availability" : "Book"}</a>` : tel ? `<a class="btn y" href="${esc(tel)}">Call</a>` : ""}<a class="btn" style="background:#fff;color:#0d1b3d" href="${esc(dir)}" rel="noopener" target="_blank">Directions</a></div><script>document.body.classList.add("hasbar")</script>`; })()}
 <p>${esc(describeVenue(v))}${v.lta ? " It's an LTA registered venue." : ""}</p>
 ${v.about ? `<p>${esc(v.about)}</p>` : ""}
 <div class="facts">
@@ -131,7 +140,6 @@ ${v.about ? `<p>${esc(v.about)}</p>` : ""}
 </div>
 ${facList(v.facilities).length ? `<div class="tags">${facList(v.facilities).map(f => `<span class="tag">${FAC[f]}</span>`).join("")}</div>` : ""}
 ${v.deal ? `<p class="deal"><b>Deal:</b> ${esc(v.deal)}</p>` : ""}
-<div class="btns">${book ? `<a class="btn y" href="${esc(book)}" rel="nofollow noopener" target="_blank">Check availability on ${esc(appOf(book))}</a>` : ""}${site && site !== book ? `<a class="btn b" href="${esc(site)}" rel="nofollow noopener" target="_blank">Venue website</a>` : ""}</div>
 ${v.email || v.tel ? `<p class="muted">Contact: ${esc([v.tel, v.email].filter(Boolean).join(" · "))}</p>` : ""}
 <h2 id="reviews">Reviews${reviews.length ? ` (${reviews.length})` : ""}</h2>
 ${reviews.length ? reviews.map(r => `<div class="rev"><p><span class="stars">${stars(r.rating)}</span> <b>${esc(r.title || "")}</b></p><p>${esc(r.body)}</p><p class="muted">${esc(r.name)} · ${new Date(r.created).toLocaleDateString("en-GB", { month: "long", year: "numeric" })}</p></div>`).join("") : `<p>No reviews yet. Played here? Be the first.</p>`}
