@@ -2,7 +2,8 @@
 // Contacts live in D1 table `outreach`. Every email has an opt-out link (/api/outreach?optout=<token>).
 import { sendEmail } from "../lib/brevo.js";
 const SITE = "https://allaccesspadel.co.uk";
-const REPLY_TO = { email: "joe@robinsteele.co.uk", name: "Joe Steele" };
+const FROM = { email: "joe@allaccesspadel.com", name: "Joe Steele" };
+const REPLY_TO = FROM;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 export const PER_DAY = 20;
 
@@ -56,7 +57,7 @@ export async function runOutreach(env, limit = PER_DAY) {
     const optout = `${SITE}/api/outreach?optout=${token}`;
     try {
       const m = outreachEmail(JSON.parse(r.clubs), optout);
-      await sendEmail(env, { to: r.email, ...m, unsubUrl: optout, replyTo: REPLY_TO, sender: { name: "Joe Steele", email: "joe@allaccesspadel.co.uk" } });
+      await sendEmail(env, { to: r.email, ...m, unsubUrl: optout, replyTo: REPLY_TO, sender: FROM });
       await env.DB.prepare("UPDATE outreach SET status = 'sent', sent_at = ?, token = ? WHERE email = ?").bind(Date.now(), token, r.email).run(); sent++;
     } catch (e) {
       failed++; await env.DB.prepare("UPDATE outreach SET status = 'failed', error = ?, token = ? WHERE email = ?").bind(String(e.message).slice(0, 300), token, r.email).run();
