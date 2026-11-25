@@ -12,6 +12,7 @@ import * as contact from "./api/contact.js";
 import * as alerts from "./api/alerts.js";
 import { json } from "../lib/shared.js";
 import { seoRoute } from "./seo.js";
+import { runAlerts } from "./alertsjob.js";
 
 const routes = { "/api/submissions": submissions, "/api/admin": admin, "/api/venues": venues, "/api/import": importer, "/api/reviews": reviews, "/api/claims": claims, "/api/club": club, "/api/news": news, "/api/towns": towns, "/api/contact": contact, "/api/alerts": alerts };
 
@@ -36,5 +37,8 @@ export default {
     if (url.pathname.startsWith("/api/")) return json({ error: "Not found" }, 404);
     try { const r = await seoRoute(request, env); if (r) return r; } catch (e) { console.error(e); }
     return env.ASSETS.fetch(request);
+  },
+  async scheduled(event, env, ctx) {
+    ctx.waitUntil(runAlerts(env).then(r => console.log("alerts", JSON.stringify(r))).catch(e => console.error("alerts job", e)));
   },
 };
