@@ -8,10 +8,12 @@ import * as claims from "./api/claims.js";
 import * as club from "./api/club.js";
 import * as news from "./api/news.js";
 import * as towns from "./api/towns.js";
+import * as contact from "./api/contact.js";
+import * as alerts from "./api/alerts.js";
 import { json } from "../lib/shared.js";
 import { seoRoute } from "./seo.js";
 
-const routes = { "/api/submissions": submissions, "/api/admin": admin, "/api/venues": venues, "/api/import": importer, "/api/reviews": reviews, "/api/claims": claims, "/api/club": club, "/api/news": news, "/api/towns": towns };
+const routes = { "/api/submissions": submissions, "/api/admin": admin, "/api/venues": venues, "/api/import": importer, "/api/reviews": reviews, "/api/claims": claims, "/api/club": club, "/api/news": news, "/api/towns": towns, "/api/contact": contact, "/api/alerts": alerts };
 
 export default {
   async fetch(request, env, ctx) {

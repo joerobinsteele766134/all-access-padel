@@ -126,6 +126,16 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 .searchrow{margin:0 0 14px;max-width:520px}
 .morewrap{display:flex;justify-content:center;margin-top:22px}
+.addband{padding-top:40px;padding-bottom:40px}.addrow,.alertrow{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
+.alertband{background:var(--court);color:#fff;padding-top:40px;padding-bottom:40px}.alertband .sub{color:#e8eeff}.alertband h2 span{color:var(--ball)}
+.alform{position:relative;display:grid;grid-template-columns:1fr auto;gap:10px;max-width:520px;flex:1 1 360px}
+.alform input[type=email]{min-height:50px;border:3px solid var(--navy);border-radius:6px;font:600 17px Barlow,sans-serif;padding:0 14px;color:#0d1b3d;background:#fff}
+.alform .btn{min-height:50px}.alc{grid-column:1/-1;display:flex;gap:10px;align-items:flex-start;font-size:13px;font-weight:500;color:#e8eeff;margin:0}.alc input{width:18px;height:18px;flex:none;margin-top:2px;accent-color:var(--ball)}.alc a{color:#fff}
+.alform .status{grid-column:1/-1;margin:0;color:var(--ball);font-weight:700}
+.dl{display:flex!important;overflow-x:auto;scroll-snap-type:x mandatory;padding:6px 4px 14px!important;gap:14px}
+.dl li{flex:0 0 min(78%,280px);scroll-snap-align:start}.dl li a{color:inherit;text-decoration:none;display:block}
+.save{position:absolute;top:8px;right:8px;width:40px;height:40px;border-radius:50%;border:2px solid var(--line);background:var(--card);color:var(--ink);font-size:20px;line-height:1;cursor:pointer;display:grid;place-items:center}
+.save[aria-pressed=true]{background:#e03a5f;border-color:#e03a5f;color:#fff}.card{position:relative}.card .ht{padding-right:50px}
 .shopband{background:var(--navy);color:#fff}
 .shopband .sub{color:#c9d6ff}.shopband h2{color:#fff}.shopband h2 span{color:var(--ball)}
 .kicker{font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--ball);margin:0 0 4px;font-size:14px}
@@ -164,6 +174,19 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .near b{white-space:nowrap}
 .num{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--court);color:#fff;font-weight:700;font-size:13px;flex:none;margin-right:8px}
 .mapnote{font-size:13px;color:var(--muted);margin:8px 0 0}
+.fig{touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none;height:480px}.fig.drag{cursor:grabbing}
+.tiles,.pins{position:absolute;inset:0}.tiles img{position:absolute;width:256px;height:256px;max-width:none}
+:root:not([data-theme=light]) .tiles{filter:light-dark(none,brightness(.72) contrast(1.1) saturate(.8))}
+.mk{position:absolute;transform:translate(-50%,-100%);border:0;background:none;padding:0;cursor:pointer}
+.mk span{display:grid;place-items:center;width:30px;height:30px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:#2457d6;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.35)}
+.mk span i{transform:rotate(45deg);font:700 12px Barlow,sans-serif;color:#fff;font-style:normal}
+.mk.sm span{width:18px;height:18px}.mk.on span{background:#0d1b3d;width:36px;height:36px}.mk.on span i{color:var(--ball)}
+.mk.me span{background:var(--ball);border-color:#0d1b3d}.mk.me{pointer-events:none;z-index:2}
+.pop{position:absolute;left:12px;right:12px;bottom:12px;z-index:5;background:var(--card);color:var(--ink);border:2px solid var(--line);border-radius:6px;padding:12px 40px 12px 14px;box-shadow:4px 4px 0 var(--line);max-width:420px}
+.pop h3{font:italic 800 22px/1.1 "Barlow Condensed",sans-serif;margin:0 0 2px}.pop p{margin:2px 0;font-size:14px}.pop .x{position:absolute;top:6px;right:6px;width:32px;height:32px;border:0;background:none;font-size:20px;cursor:pointer;color:var(--ink)}
+.pop .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.pop .row a{font-weight:700;font-size:14px;text-decoration:none;padding:6px 10px;border-radius:4px;border:2px solid var(--line);color:var(--ink)}.pop .row a.y{background:var(--ball);color:#0d1b3d;border-color:#0d1b3d}
+.mctl{position:absolute;top:10px;right:10px;z-index:4;display:grid;gap:6px}.mctl button{width:40px;height:40px;border:2px solid #0d1b3d;border-radius:6px;background:#fff;color:#0d1b3d;font:800 20px Barlow,sans-serif;cursor:pointer}
+.attr{position:absolute;right:0;bottom:0;z-index:3;font-size:11px;background:rgba(255,255,255,.85);color:#333;padding:1px 6px}.attr a{color:#333}
 /* forms */
 .panel{background:var(--card);border:2px solid var(--line);border-radius:4px;padding:20px}
 .two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
@@ -214,7 +237,7 @@ footer p{max-width:75ch;margin:0 0 8px}
 .dialog .row .btn{flex:1}
 .err{color:light-dark(#b3261e,#ff9a8f);font-weight:700;font-size:14px;margin:0;min-height:1.2em}
 @media(max-width:820px){.mapwrap,.two{grid-template-columns:1fr}}
-@media(max-width:700px){.hero .wrap{grid-template-columns:1fr}.hero::before{width:90%;right:-55%}.mark{display:none}footer .wrap{grid-template-columns:1fr}.fgrid{grid-template-columns:1fr}.brand b{display:none}.fig{min-height:340px}}
+@media(max-width:700px){.hero .wrap{grid-template-columns:1fr}.hero::before{width:90%;right:-55%}.mark{display:none}footer .wrap{grid-template-columns:1fr}.fgrid{grid-template-columns:1fr}.brand b{display:none}.fig{height:380px}}
 </style>
 </head>
 <body>
@@ -281,6 +304,7 @@ footer p{max-width:75ch;margin:0 0 8px}
             <label><input type="checkbox" name="f" value="coaching"> Coaching</label>
           </fieldset>
           <fieldset><legend>Other</legend>
+            <label><input type="checkbox" name="f" value="saved"> My saved courts <span class="muted" id="savedN"></span></label>
             <label><input type="checkbox" name="f" value="rated"> Rated 4★ or more</label>
             <label><input type="checkbox" name="f" value="lta"> LTA registered</label>
           </fieldset>
@@ -294,6 +318,17 @@ footer p{max-width:75ch;margin:0 0 8px}
         <div class="morewrap"><button class="btn n" type="button" id="more" hidden>Show more courts</button></div>
       </div>
     </div>
+  </div>
+</section>
+
+<section class="band alertband" id="alerts" aria-labelledby="alh">
+  <div class="wrap alertrow">
+    <div><h2 class="disp" id="alh">New courts near <span id="alPlace">you</span></h2><p class="sub" style="margin:0">Padel clubs are opening every week. Get a short email when one opens near you.</p></div>
+    <form id="alForm" class="alform"><label for="alEmail" class="vh">Your email</label><input id="alEmail" type="email" required placeholder="Your email address" autocomplete="email">
+      <button class="btn y" type="submit">Tell me</button>
+      <label class="alc"><input type="checkbox" id="alOk" required><span>Email me when a new padel court opens near me, plus occasional local padel news. I can unsubscribe at any time. <a href="/privacy">Privacy notice</a></span></label>
+      <input id="alHp" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px">
+      <p class="status" id="alStatus" role="status"></p></form>
   </div>
 </section>
 
@@ -333,10 +368,14 @@ footer p{max-width:75ch;margin:0 0 8px}
 <section class="band alt" id="map">
   <div class="wrap">
     <h2 class="disp">The map</h2>
-    <p class="sub">You're the yellow dot. The rings are 5, 10 and 20 miles out. Tap a pin or a name to see the venue.</p>
+    <p class="sub">You're the yellow pin. Drag to move around, use + and − to zoom, and tap a pin to see the venue. The map follows your filters.</p>
     <div class="mapwrap">
-      <div><div class="fig" id="fig"><svg id="mapsvg" role="img" aria-label="Map of padel venues around you"></svg></div>
-      <p class="mapnote">Schematic map: north is up, and positions are approximate.</p></div>
+      <div><div class="fig" id="fig" aria-label="Map of padel venues around you">
+        <div class="tiles" id="tiles"></div><div class="pins" id="pins"></div><div class="pop" id="pop" hidden></div>
+        <div class="mctl"><button type="button" id="zin" aria-label="Zoom in">+</button><button type="button" id="zout" aria-label="Zoom out">−</button><button type="button" id="zme" aria-label="Back to my location" title="Back to my location">◎</button></div>
+        <div class="attr">© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors</div>
+      </div>
+      <p class="mapnote" id="mapnote"></p></div>
       <ol class="near" id="near"></ol>
     </div>
   </div>
@@ -360,34 +399,16 @@ footer p{max-width:75ch;margin:0 0 8px}
 <section class="band deals" id="deals" aria-labelledby="dh">
   <div class="wrap">
     <h2 class="disp" id="dh">The deals board</h2>
-    <p class="sub">Free sessions, cheap rackets and weekends away. Updated 24 November 2026.</p>
+    <p class="sub">Free sessions, cheap rackets and weekends away, nearest first. Swipe for more.</p>
     <ul class="dl" id="dealslist"></ul>
     <p class="tips"><b>Top tip:</b> courts are priced per court, not per person, so get four of you together and split it. If you play every week, compare the membership price with what you'd pay per game. Members usually book earlier and pay less.</p>
   </div>
 </section>
 
-<section class="band" id="add">
-  <div class="wrap">
-    <h2 class="disp">Add a court or a deal</h2>
-    <p class="sub">Know a court we've missed, spotted an offer or found something wrong? Run a club and want to be featured? Tell us here.</p>
-    <div class="two">
-      <form class="panel" id="sForm" style="position:relative">
-        <div class="fgrid">
-          <div class="full"><label for="sType">What is it?</label><select id="sType"><option>A court we've missed</option><option>A deal or offer</option><option>A price</option><option>Something's wrong</option><option>Feature my club</option></select></div>
-          <div class="full"><label for="sVenue">Venue name</label><input id="sVenue" maxlength="100" required></div>
-          <div class="full"><label for="sDetails">Details</label><textarea id="sDetails" maxlength="800" required placeholder="Where it is, prices, how to book, dates of the offer…"></textarea></div>
-          <div class="full"><label for="sContact">Your email or phone (optional)</label><input id="sContact" maxlength="120"><p class="hint">Only the site owner sees what you send here. Everything is checked before it goes on the site.</p></div>
-        </div>
-        <input id="sHp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px">
-        <button class="btn b" type="submit" style="margin-top:14px;width:100%">Send it in</button>
-        <p class="status" id="sStatus" role="status"></p>
-      </form>
-      <div class="panel">
-        <h3 class="disp" style="font-size:28px;margin-bottom:6px">Run a padel club?</h3>
-        <p style="margin:0 0 10px">Claim your listing to update your details, prices, hours and offers yourself, and ask about a Featured spot at the top of your area. Find your venue in the list above, open it, and tap <b>Claim this venue</b>.</p>
-        <a class="btn n" href="/for-clubs">Club owners: start here</a>
-      </div>
-    </div>
+<section class="band addband" id="add">
+  <div class="wrap addrow">
+    <div><h2 class="disp">Missing something?</h2><p class="sub" style="margin:0">Know a court we've missed, spotted a deal or found a mistake? Tell us and we'll add it.</p></div>
+    <div class="cta"><a class="btn n" href="/add">Add a court or deal</a><a class="btn b" href="/for-clubs">I run a club</a></div>
   </div>
 </section>
 </main>
@@ -510,7 +531,7 @@ const F=[["all","Everything"],["indoor","Indoor"],["covered","Covered"],["outdoo
 const FAC={parking:"Parking",changing:"Changing rooms",cafe:"Café",bar:"Bar",racket_hire:"Racket hire",floodlit:"Floodlit",open_late:"Open late",accessible:"Step-free access",shop:"Shop",coaching:"Coaching"};
 let shown=24,query="",fs={sort:"near",dist:0,type:[],f:[]};
 try{const s=JSON.parse(localStorage.getItem("aap-filters")||"null");if(s&&Array.isArray(s.type)&&Array.isArray(s.f))fs={sort:s.sort||"near",dist:+s.dist||0,type:s.type,f:s.f}}catch(e){}
-const LBL=Object.fromEntries([...F,["changing","Changing rooms"],["floodlit","Floodlit"],["coaching","Coaching"],["deal","Has a deal"],["rated","Rated 4★+"]]);
+const LBL=Object.fromEntries([...F,["changing","Changing rooms"],["floodlit","Floodlit"],["coaching","Coaching"],["deal","Has a deal"],["rated","Rated 4★+"],["saved","My saved courts"]]);
 const nActive=()=>fs.type.length+fs.f.length+(fs.dist?1:0);
 function syncForm(){const f=$("filters");f.sort.value=fs.sort;f.dist.value=String(fs.dist);f.querySelectorAll("input[name=type]").forEach(i=>i.checked=fs.type.includes(i.value));f.querySelectorAll("input[name=f]").forEach(i=>i.checked=fs.f.includes(i.value))}
 function readForm(){const f=$("filters");fs={sort:f.sort.value,dist:+f.dist.value,type:[...f.querySelectorAll("input[name=type]:checked")].map(i=>i.value),f:[...f.querySelectorAll("input[name=f]:checked")].map(i=>i.value)};try{localStorage.setItem("aap-filters",JSON.stringify(fs))}catch(e){}}
@@ -519,10 +540,12 @@ const linkOf=v=>{const u=(v.url||"").trim();if(!u||/\s/.test(u)||!/\./.test(u)||
 const appOf=u=>{const h=(u||"").toLowerCase();return h.includes("playtomic")?"Playtomic":h.includes("matchi")?"MATCHi":h.includes("nettla")?"Nettla":(h.includes("clubspark")||h.includes("lta.org.uk"))?"ClubSpark":"the booking page"};
 const safe=u=>/^https:\/\//i.test(u||"")?u:"";
 const matches=(v,q)=>!q||(v.n+" "+v.a+" "+(v.pc||"")).toLowerCase().includes(q);
+let SAVED=new Set();try{SAVED=new Set(JSON.parse(localStorage.getItem("aap-saved")||"[]"))}catch(e){}
+const saveSaved=()=>{try{localStorage.setItem("aap-saved",JSON.stringify([...SAVED]))}catch(e){}};
 function card(v){
   const link=linkOf(v);
   const tags=[];if(v.courts)tags.push(esc(v.courts));if(v.lta)tags.push("LTA registered");
-  return `<article class="card${v.pick?" feat":""}" id="v-${esc(v.id)}">
+  return `<article class="card${v.pick?" feat":""}" id="v-${esc(v.id)}"><button type="button" class="save" data-save="${esc(v.id)}" aria-pressed="${SAVED.has(v.id)}" aria-label="${SAVED.has(v.id)?"Remove from":"Save to"} my courts: ${esc(v.n)}" title="${SAVED.has(v.id)?"Saved":"Save this court"}">${SAVED.has(v.id)?"♥":"♡"}</button>
     <div class="head"><div class="mi"><b>${v.d<1?"<1":Math.round(v.d)}</b><small>miles</small></div>
       <div class="ht"><h3><a href="/venues/${encodeURIComponent(v.id)}" style="color:inherit;text-decoration:none">${esc(v.n)}</a></h3><p class="addr">${esc(v.a)}</p></div></div>
     <div class="body">
@@ -538,10 +561,12 @@ function card(v){
     </div></article>`;
 }
 function renderCourts(){
-  let all=withD().filter(v=>(!fs.dist||v.d<=fs.dist)&&(!fs.type.length||fs.type.some(t=>v.t.includes(t)))&&fs.f.every(t=>v.t.includes(t))&&matches(v,query));
+  let all=withD().filter(v=>(!fs.dist||v.d<=fs.dist)&&(!fs.type.length||fs.type.some(t=>v.t.includes(t)))&&fs.f.every(t=>t==="saved"?SAVED.has(v.id):v.t.includes(t))&&matches(v,query));
   if(fs.sort==="rated")all.sort((a,b)=>(b.rating||0)-(a.rating||0)||a.d-b.d);
   else if(fs.sort==="price")all.sort((a,b)=>(!!b.price-!!a.price)||a.d-b.d);
   if(!query){const top=all.filter(v=>v.featured&&v.d<=20).slice(0,2);all=[...top,...all.filter(v=>!top.includes(v))]}
+  FL=[...all].sort((a,b)=>a.d-b.d);if(window.MV&&fig)drawMap();
+  $("savedN").textContent=SAVED.size?`(${SAVED.size})`:"";
   const n=nActive();$("fcount").hidden=!n;$("fcount").textContent=n;
   $("activef").innerHTML=[...(fs.dist?[["dist",`Within ${fs.dist} miles`]]:[]),...fs.type.map(t=>["type:"+t,LBL[t]]),...fs.f.map(t=>["f:"+t,LBL[t]||t])].map(([k,l])=>`<button type="button" data-k="${k}" aria-label="Remove filter ${l}">${l}</button>`).join("");
   const list=all.slice(0,shown);
@@ -558,52 +583,65 @@ $("filters").addEventListener("change",()=>{readForm();shown=24;renderCourts()})
 $("fclear").addEventListener("click",()=>{fs={sort:"near",dist:0,type:[],f:[]};syncForm();readForm();shown=24;renderCourts()});
 $("activef").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;const [g,v]=b.dataset.k.split(":");if(g==="dist")fs.dist=0;else fs[g]=fs[g].filter(x=>x!==v);syncForm();readForm();shown=24;renderCourts()});
 $("more").addEventListener("click",()=>{shown+=24;renderCourts()});
+$("grid").addEventListener("click",e=>{const b=e.target.closest("[data-save]");if(!b)return;const id=b.dataset.save;if(SAVED.has(id))SAVED.delete(id);else SAVED.add(id);saveSaved();renderCourts()});
 let qt;$("q").addEventListener("input",e=>{clearTimeout(qt);qt=setTimeout(()=>{query=e.target.value.trim().toLowerCase();shown=24;renderCourts()},150)});
 
 /* map */
-let sel=null;const svg=$("mapsvg"),fig=$("fig");
+var sel=null,FL=null,fig=$("fig"),tilesEl=$("tiles"),pinsEl=$("pins"),pop=$("pop");
+var MV={lat:null,lng:null,z:11,set:false};
+const wx=(lng,z)=>(lng+180)/360*256*2**z;
+const wy=(lat,z)=>{const r=lat*Math.PI/180;return(1-Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2*256*2**z};
+const unx=(x,z)=>x/(256*2**z)*360-180;
+const uny=(y,z)=>{const n=Math.PI-2*Math.PI*y/(256*2**z);return 180/Math.PI*Math.atan(.5*(Math.exp(n)-Math.exp(-n)))};
+function mapList(){return(FL||withD())}
+function fitMap(){const W=fig.clientWidth,H=fig.clientHeight;const l=mapList();const pts=l.filter(v=>v.d<=15).slice(0,20);const use=pts.length>=3?pts:l.slice(0,6);
+  let z=14;for(;z>5;z--){const xs=[wx(me.lng,z),...use.map(v=>wx(v.lng,z))],ys=[wy(me.lat,z),...use.map(v=>wy(v.lat,z))];
+    const cx=wx(me.lng,z),cy=wy(me.lat,z);const dx=Math.max(...xs.map(x=>Math.abs(x-cx))),dy=Math.max(...ys.map(y=>Math.abs(y-cy)));if(dx*2<W-80&&dy*2<H-90)break}
+  MV.lat=me.lat;MV.lng=me.lng;MV.z=z;MV.set=true}
 function drawMap(){
   const W=fig.clientWidth,H=fig.clientHeight;if(!W||!H||!V.length)return;
-  const all=withD();let list=all.filter(v=>v.d<=25).slice(0,40);if(list.length<8)list=all.slice(0,8);
-  const k=Math.cos(me.lat*Math.PI/180);
-  const maxD=Math.max(22,...list.map(v=>v.d))*1.08;
-  const scale=Math.min(W,H)/2/maxD;
-  const P=(lat,lng)=>[W/2+(lng-me.lng)*69*k*scale,H/2-(lat-me.lat)*69*scale];
-  let s="";
-  [5,10,20].forEach(r=>{s+=`<circle cx="${W/2}" cy="${H/2}" r="${r*scale}" fill="none" stroke="currentColor" stroke-opacity=".25" stroke-dasharray="4 6"/>`;s+=`<text x="${W/2+4}" y="${H/2-r*scale-4}" font-size="12" fill="currentColor" fill-opacity=".6">${r} mi</text>`});
-  s+=`<text x="${W-14}" y="22" text-anchor="end" font-size="13" font-weight="700" fill="currentColor" fill-opacity=".7">N ↑</text>`;
-  const order=list.map((v,i)=>[v,i]).reverse();
-  order.forEach(([v,i])=>{const[x,y]=P(v.lat,v.lng);const on=sel===v.id;const r=on?16:(i<10?13:7);
-    s+=`<g class="pin" data-id="${esc(v.id)}" tabindex="0" role="button" aria-label="${esc(v.n)}"><circle cx="${x}" cy="${y}" r="${r}" fill="${on?"#0d1b3d":"#2457d6"}" stroke="#fff" stroke-width="2"/>${i<10?`<text x="${x}" y="${y+4.5}" text-anchor="middle" font-size="12" font-weight="700" fill="${on?"#e4ff3a":"#fff"}">${i+1}</text>`:""}</g>`;
-  });
-  const sv=list.find(v=>v.id===sel);
-  if(sv&&W>420){const[x,y]=P(sv.lat,sv.lng);const lx=x+22>W-150?x-22:x+22;s+=`<text x="${lx}" y="${y+5}" text-anchor="${lx<x?"end":"start"}" font-size="14" font-weight="700" fill="currentColor" paint-order="stroke" stroke="var(--bg)" stroke-width="4">${esc(sv.n)}</text>`}
-  s+=`<circle cx="${W/2}" cy="${H/2}" r="11" fill="#e4ff3a" stroke="#0d1b3d" stroke-width="3"/><text x="${W/2}" y="${H/2+28}" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor" paint-order="stroke" stroke="var(--bg)" stroke-width="4">${esc(me.name)}</text>`;
-  svg.innerHTML=s;svg.style.color="var(--ink)";
-  $("near").innerHTML=all.slice(0,10).map((v,i)=>`<li><button type="button" data-id="${esc(v.id)}" aria-current="${sel===v.id}"><span style="display:flex;align-items:center"><span class="num">${i+1}</span>${esc(v.n)}</span><b>${v.d<1?"<1":v.d.toFixed(0)} mi</b></button></li>`).join("");
+  if(!MV.set)fitMap();
+  const z=MV.z,cx=wx(MV.lng,z),cy=wy(MV.lat,z),x0=cx-W/2,y0=cy-H/2,n=2**z;
+  let t="";for(let tx=Math.floor(x0/256);tx<=Math.floor((x0+W)/256);tx++)for(let ty=Math.floor(y0/256);ty<=Math.floor((y0+H)/256);ty++){if(ty<0||ty>=n)continue;const wxp=((tx%n)+n)%n;
+    t+=`<img alt="" draggable="false" onerror="this.style.visibility='hidden'" src="https://tile.openstreetmap.org/${z}/${wxp}/${ty}.png" style="left:${Math.round(tx*256-x0)}px;top:${Math.round(ty*256-y0)}px">`}
+  tilesEl.innerHTML=t;
+  const l=mapList();const top=new Set(l.slice(0,10).map(v=>v.id));
+  let pins="";l.forEach((v,i)=>{const x=wx(v.lng,z)-x0,y=wy(v.lat,z)-y0;if(x<-20||y<-40||x>W+20||y>H+20)return;const big=top.has(v.id)||sel===v.id;
+    pins+=`<button type="button" class="mk${big?"":" sm"}${sel===v.id?" on":""}" data-id="${esc(v.id)}" style="left:${x}px;top:${y}px;z-index:${sel===v.id?3:big?2:1}" aria-label="${esc(v.n)}, ${v.d.toFixed(1)} miles"><span><i>${big&&i<10?i+1:""}</i></span></button>`});
+  const mx=wx(me.lng,z)-x0,my=wy(me.lat,z)-y0;pins+=`<div class="mk me" style="left:${mx}px;top:${my}px" aria-hidden="true"><span><i>•</i></span></div>`;
+  pinsEl.innerHTML=pins;
+  const sv=l.find(v=>v.id===sel);
+  if(sv){const lk=linkOf(sv),bk=safe(sv.book);pop.hidden=false;pop.innerHTML=`<button type="button" class="x" aria-label="Close">×</button><h3>${esc(sv.n)}</h3><p>${sv.d<1?"Under a mile":sv.d.toFixed(1)+" miles"} away · ${esc(sv.courts||"")}</p>${sv.price?`<p><b>${esc(sv.price)}</b></p>`:""}${sv.deal?`<p><b>Deal:</b> ${esc(sv.deal)}</p>`:""}<div class="row"><a href="/venues/${encodeURIComponent(sv.id)}">Details</a>${bk?`<a class="y" href="${esc(bk)}" target="_blank" rel="noopener">Book</a>`:lk?`<a class="y" href="${esc(lk)}" target="_blank" rel="noopener">Website</a>`:""}<a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(sv.n+" "+(sv.pc||""))}" target="_blank" rel="noopener">Directions</a></div>`}else pop.hidden=true;
+  $("mapnote").textContent=`${l.length} venue${l.length===1?"":"s"} match your filters.`;
+  $("near").innerHTML=l.slice(0,10).map((v,i)=>`<li><button type="button" data-id="${esc(v.id)}" aria-current="${sel===v.id}"><span style="display:flex;align-items:center"><span class="num">${i+1}</span>${esc(v.n)}</span><b>${v.d<1?"<1":v.d.toFixed(0)} mi</b></button></li>`).join("");
 }
-const pick=id=>{sel=sel===id?null:id;drawMap()};
-svg.addEventListener("click",e=>{const g=e.target.closest(".pin");if(g)pick(g.dataset.id)});
-svg.addEventListener("keydown",e=>{const g=e.target.closest(".pin");if(g&&(e.key==="Enter"||e.key===" ")){e.preventDefault();pick(g.dataset.id)}});
-$("near").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;pick(b.dataset.id)});
-const mapRO=new ResizeObserver(drawMap);mapRO.observe(fig);
+const pick=(id,centre)=>{sel=sel===id&&!centre?null:id;if(centre){const v=V.find(x=>x.id===id);if(v){MV.lat=v.lat;MV.lng=v.lng;MV.z=Math.max(MV.z,12)}}drawMap()};
+pinsEl.addEventListener("click",e=>{const b=e.target.closest(".mk");if(b&&b.dataset.id)pick(b.dataset.id)});
+pop.addEventListener("click",e=>{if(e.target.closest(".x")){sel=null;drawMap()}});
+$("near").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;pick(b.dataset.id,true);fig.scrollIntoView({behavior:"smooth",block:"nearest"})});
+const zoomBy=d=>{MV.z=Math.min(17,Math.max(5,MV.z+d));drawMap()};
+$("zin").addEventListener("click",()=>zoomBy(1));$("zout").addEventListener("click",()=>zoomBy(-1));
+$("zme").addEventListener("click",()=>{MV.set=false;sel=null;drawMap()});
+fig.addEventListener("wheel",e=>{if(!e.ctrlKey&&!e.metaKey)return;e.preventDefault();zoomBy(e.deltaY<0?1:-1)},{passive:false});
+fig.addEventListener("dblclick",e=>{if(e.target.closest("button,a"))return;zoomBy(1)});
+{let d=null;fig.addEventListener("pointerdown",e=>{if(e.target.closest("button,a,.pop"))return;d={x:e.clientX,y:e.clientY,cx:wx(MV.lng,MV.z),cy:wy(MV.lat,MV.z)};fig.setPointerCapture(e.pointerId);fig.classList.add("drag")});
+fig.addEventListener("pointermove",e=>{if(!d)return;const nx=d.cx-(e.clientX-d.x),ny=d.cy-(e.clientY-d.y);MV.lng=unx(nx,MV.z);MV.lat=uny(ny,MV.z);drawMap()});
+const end=()=>{d=null;fig.classList.remove("drag")};fig.addEventListener("pointerup",end);fig.addEventListener("pointercancel",end);}
+const mapRO=new ResizeObserver(()=>drawMap());mapRO.observe(fig);
 
 function populate(){
 const deals=withD().filter(v=>v.deal).slice(0,12);
-$("dealslist").innerHTML=deals.length?deals.map(v=>`<li><strong>${esc(v.n)}</strong><span>${esc(v.deal)}</span></li>`).join(""):`<li><strong>No deals near you yet</strong><span>Spotted one? Send it in below.</span></li>`;
+$("dealslist").innerHTML=deals.length?deals.map(v=>`<li><a href="/venues/${encodeURIComponent(v.id)}"><strong>${esc(v.n)}</strong><span>${esc(v.deal)}</span><small style="display:block;margin-top:8px;color:#c9d6ff">${v.d<1?"Under a mile":Math.round(v.d)+" miles"} away</small></a></li>`).join(""):`<li><strong>No deals near you yet</strong><span>Spotted one? Send it in below.</span></li>`;
 }
 /* deals */
 $("dealslist").innerHTML=V.filter(v=>v.deal).map(v=>`<li><strong>${esc(v.n)}</strong><span>${esc(v.deal)}</span></li>`).join("");
 
 /* submissions */
 const post=async(url,body)=>{const r=await fetch(url,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(body)});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||"Something went wrong");return j};
-$("sForm").addEventListener("submit",async e=>{
-  e.preventDefault();$("sStatus").textContent="Sending…";
-  try{await post("/api/submissions",{type:$("sType").value,venue:$("sVenue").value,details:$("sDetails").value,contact:$("sContact").value,website:$("sHp").value});
-    $("sStatus").textContent="Thanks, got it. We'll check it before it goes on the site.";e.target.reset()}
-  catch(err){$("sStatus").textContent=err.message}
-});
-function refresh(){$("locName").textContent=me.name;if(V.length)populate();renderCourts();drawMap()}
+$("alForm").addEventListener("submit",async e=>{e.preventDefault();const s=$("alStatus");s.textContent="Signing you up…";
+  try{const r=await fetch("/api/alerts",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({email:$("alEmail").value,consent:$("alOk").checked,place:me.name,lat:me.lat,lng:me.lng,website:$("alHp").value})});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||"Something went wrong. Try again.");s.textContent=`You're on the list. We'll email you when a new court opens near ${me.name}.`;e.target.reset()}
+  catch(err){s.textContent=err.message}});
+function refresh(){$("locName").textContent=me.name;$("alPlace").textContent=me.name==="your location"?"you":me.name;MV.set=false;sel=null;if(V.length)populate();renderCourts()}
 fetch("/api/news?limit=4").then(r=>r.json()).then(d=>{const L={opening:"New club",planning:"Planning",news:"News",event:"Event"};$("newsList").innerHTML=(Array.isArray(d)&&d.length)?d.map(n=>`<a class="step" href="${n.venue_id?"/venues/"+encodeURIComponent(n.venue_id):"/news"}" style="color:inherit;text-decoration:none"><p style="margin:0 0 4px;font-size:13px"><b>${esc(L[n.kind]||"News")}</b> · ${esc(new Date(n.published+"T12:00:00Z").toLocaleDateString("en-GB",{day:"numeric",month:"short"}))}${n.area?" · "+esc(n.area):""}</p><h3>${esc(n.title)}</h3><p>${esc(n.summary)}</p></a>`).join(""):`<p class="muted">No news yet.</p>`}).catch(()=>{$("newsList").innerHTML=`<p class="muted">Couldn't load the news.</p>`});
 fetch("/api/venues?v=4").then(r=>r.json()).then(d=>{V=(Array.isArray(d)?d:[]).map(r=>{const t=(r.tags||"").split(",").map(s=>s.trim()).filter(Boolean);const c=(r.courts||"").toLowerCase();if(c.includes("indoor"))t.push("indoor");if(c.includes("covered"))t.push("covered");if(c.split(",").some(x=>x.trim()==="outdoor"))t.push("outdoor");if(r.price)t.push("price");if(r.deal)t.push("deal");if(r.lta)t.push("lta");if(r.book_url)t.push("book");const fac=(r.facilities||"").split(",").map(x=>x.trim()).filter(x=>FAC[x]);fac.forEach(f=>t.push(f==="bar"?"cafe":f));if(r.rating>=4)t.push("rated");return{id:r.id,n:r.name,a:[r.district,r.postcode].filter(Boolean).join(" · "),pc:r.postcode,lat:+r.lat,lng:+r.lng,courts:r.courts,lta:!!r.lta,url:r.url,email:r.email,tel:r.tel,about:r.about,deal:r.deal,price:r.price,price_note:r.price_note,pick:!!r.pick,flag:r.flag,book:r.book_url,fac,hours:r.hours,rating:r.rating,reviews:r.reviews,featured:!!r.featured,t}}).filter(v=>isFinite(v.lat)&&isFinite(v.lng));refresh()}).catch(()=>{$("grid").innerHTML=`<div class="empty">Couldn't load the court list. Refresh to try again.</div>`});
 let asked=false;try{asked=!!localStorage.getItem("aap-loc")}catch(e){}

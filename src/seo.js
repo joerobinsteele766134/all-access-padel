@@ -4,6 +4,7 @@ import { GUIDES } from "./guides.js";
 import { KIT, kitBody } from "./kit.js";
 import { pricesIndex, cityPricePage, cityPages } from "./prices.js";
 import { forClubsPage, badgeSvg } from "./forclubs.js";
+import { aboutPage, privacyPage, addPage } from "./pages.js";
 import { loadTowns, townPage, townsIndex, townsWithCourts, nearestTowns } from "./townpages.js";
 import { latestNews, newsBody, newsRss, newsCard, NEWS_CSS, KINDS } from "./news.js";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -71,7 +72,7 @@ ${jsonld.map(j => `<script type="application/ld+json">${JSON.stringify(j).replac
 </head><body>
 <header><a class="logo" href="/">ALL ACCESS <i>PADEL</i></a><nav aria-label="Main"><a href="/#courts">Find courts</a><a href="/padel">Towns</a><a href="/padel-prices">Prices</a><a href="/guides">Guides</a><a href="/news">News</a><a class="k" href="/kit">Kit shop</a></nav></header>
 <main>${body}</main>
-<footer><p><a href="/">Find padel courts near you</a> · <a href="/padel">Padel by town</a> · <a href="/padel-prices">Padel prices</a> · <a href="/for-clubs">For clubs</a> · <a href="/padel-courts">Padel courts by area</a> · <a href="/guides">Guides</a> · <a href="/kit">Kit shop</a> · <a href="/news">News</a></p>
+<footer><p><a href="/">Find padel courts near you</a> · <a href="/padel">Padel by town</a> · <a href="/padel-prices">Padel prices</a> · <a href="/for-clubs">For clubs</a> · <a href="/about">About &amp; contact</a> · <a href="/privacy">Privacy</a> · <a href="/padel-courts">Padel courts by area</a> · <a href="/guides">Guides</a> · <a href="/kit">Kit shop</a> · <a href="/news">News</a></p>
 <p>Venue list built from the LTA's padel court finder plus our own research. Prices change often, so check with the venue before you go. All Access Padel is independent and not connected to the venues listed.</p></footer>
 </body></html>`;
 
@@ -127,7 +128,7 @@ ${v.featured ? `<p><span class="featured">Featured venue</span></p>` : ""}
 ${reviews.length ? `<p><span class="stars" aria-label="${avg} out of 5">${stars(avg)}</span> <b>${avg}</b> from ${reviews.length} review${reviews.length === 1 ? "" : "s"} · <a href="#reviews">Read reviews</a></p>` : ""}
 ${(() => { const dir = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent([v.name, v.postcode].filter(Boolean).join(" "))}`;
   const tel = v.tel ? `tel:${String(v.tel).replace(/[^\d+]/g, "")}` : "";
-  return `<div class="acts">${book ? `<a class="btn y" href="${esc(book)}" rel="nofollow noopener" target="_blank">Check availability on ${esc(appOf(book))}</a>` : site ? `<a class="btn y" href="${esc(site)}" rel="nofollow noopener" target="_blank">Book on the venue's website</a>` : ""}<a class="btn" href="${esc(dir)}" rel="noopener" target="_blank">Get directions</a>${site && book && site !== book ? `<a class="btn" href="${esc(site)}" rel="nofollow noopener" target="_blank">Website</a>` : ""}${tel ? `<a class="btn" href="${esc(tel)}">Call</a>` : ""}</div>
+  return `<div class="acts">${book ? `<a class="btn y" href="${esc(book)}" rel="nofollow noopener" target="_blank">Check availability on ${esc(appOf(book))}</a>` : site ? `<a class="btn y" href="${esc(site)}" rel="nofollow noopener" target="_blank">Book on the venue's website</a>` : ""}<a class="btn" href="${esc(dir)}" rel="noopener" target="_blank">Get directions</a>${site && book && site !== book ? `<a class="btn" href="${esc(site)}" rel="nofollow noopener" target="_blank">Website</a>` : ""}${tel ? `<a class="btn" href="${esc(tel)}">Call</a>` : ""}<button type="button" class="btn" id="saveV" aria-pressed="false" style="cursor:pointer;background:none;font:inherit;font-weight:700">♡ Save</button></div><script>{const id=${JSON.stringify(v.id).replace(/</g, "\\u003c")},b=document.getElementById("saveV");let S=[];try{S=JSON.parse(localStorage.getItem("aap-saved")||"[]")}catch(e){}const paint=()=>{const on=S.includes(id);b.setAttribute("aria-pressed",on);b.textContent=on?"♥ Saved":"♡ Save"};paint();b.onclick=()=>{S=S.includes(id)?S.filter(x=>x!==id):[...S,id];try{localStorage.setItem("aap-saved",JSON.stringify(S))}catch(e){}paint()}}</script>
 <div class="actbar">${book || site ? `<a class="btn y" href="${esc(book || site)}" rel="nofollow noopener" target="_blank">${book ? "Check availability" : "Book"}</a>` : tel ? `<a class="btn y" href="${esc(tel)}">Call</a>` : ""}<a class="btn" style="background:#fff;color:#0d1b3d" href="${esc(dir)}" rel="noopener" target="_blank">Directions</a></div><script>document.body.classList.add("hasbar")</script>`; })()}
 <p>${esc(describeVenue(v))}${v.lta ? " It's an LTA registered venue." : ""}</p>
 ${v.about ? `<p>${esc(v.about)}</p>` : ""}
@@ -244,7 +245,7 @@ export async function seoRoute(request, env) {
   if (p === "/rules" || p === "/padel-rules") return Response.redirect(`${origin}/guides/padel-rules`, 301);
   if (p === "/shop") return Response.redirect(`${origin}/kit`, 301);
   if (p === "/badge.svg") return new Response(badgeSvg(url.searchParams.get("style") === "dark" ? "dark" : "light"), { headers: { "content-type": "image/svg+xml", "cache-control": "public, max-age=86400", "access-control-allow-origin": "*" } });
-  if (!(p === "/for-clubs" || p === "/padel-prices" || p.startsWith("/padel-prices/") || p === "/padel" || p.startsWith("/padel/") || p === "/padel-courts" || p.startsWith("/padel-courts/") || p.startsWith("/venues/") || p === "/guides" || p.startsWith("/guides/") || p === "/kit" || p === "/news" || p === "/news.xml" || p === "/sitemap.xml" || p === "/llms.txt" || p === "/robots.txt")) return null;
+  if (!(p === "/about" || p === "/privacy" || p === "/add" || p === "/for-clubs" || p === "/padel-prices" || p.startsWith("/padel-prices/") || p === "/padel" || p.startsWith("/padel/") || p === "/padel-courts" || p.startsWith("/padel-courts/") || p.startsWith("/venues/") || p === "/guides" || p.startsWith("/guides/") || p === "/kit" || p === "/news" || p === "/news.xml" || p === "/sitemap.xml" || p === "/llms.txt" || p === "/robots.txt")) return null;
   if (p === "/robots.txt") return new Response(`# All Access Padel welcomes search engines and AI assistants.
 User-agent: *
 Allow: /
@@ -278,7 +279,7 @@ Sitemap: ${origin}/sitemap.xml
   const towns = await loadTowns(env);
 
   if (p === "/sitemap.xml") {
-    const urls = [`${origin}/`, `${origin}/padel-courts`, `${origin}/guides`, `${origin}/kit`, `${origin}/news`, `${origin}/padel`, `${origin}/padel-prices`, `${origin}/for-clubs`, ...cityPages(all, towns).map(g => `${origin}/padel-prices/${g.hub.slug}`), ...GUIDES.map(g => `${origin}/guides/${g.slug}`), ...townsWithCourts(towns, all).map(t => `${origin}/padel/${t.slug}`), ...areas.map(a => `${origin}/padel-courts/${a.slug}`), ...all.map(v => `${origin}/venues/${v.id}`)];
+    const urls = [`${origin}/`, `${origin}/padel-courts`, `${origin}/guides`, `${origin}/kit`, `${origin}/news`, `${origin}/padel`, `${origin}/padel-prices`, `${origin}/for-clubs`, `${origin}/about`, `${origin}/add`, ...cityPages(all, towns).map(g => `${origin}/padel-prices/${g.hub.slug}`), ...GUIDES.map(g => `${origin}/guides/${g.slug}`), ...townsWithCourts(towns, all).map(t => `${origin}/padel/${t.slug}`), ...areas.map(a => `${origin}/padel-courts/${a.slug}`), ...all.map(v => `${origin}/venues/${v.id}`)];
     const body = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(u => `<url><loc>${esc(u)}</loc></url>`).join("\n")}\n</urlset>`;
     return new Response(body, { headers: { "content-type": "application/xml", "cache-control": "public, max-age=3600" } });
   }
@@ -309,6 +310,9 @@ ${areas.map(a => `- [Padel courts in ${a.name}](${origin}/padel-courts/${a.slug}
     return new Response(body, { headers: { "content-type": "text/plain; charset=utf-8", "cache-control": "public, max-age=3600" } });
   }
   if (p === "/padel-courts") return html(indexPage(origin, areas, all.length));
+  if (p === "/about") return html(aboutPage({ origin, page, total: all.length }));
+  if (p === "/privacy") return html(privacyPage({ origin, page }));
+  if (p === "/add") return html(addPage({ origin, page }));
   if (p === "/for-clubs") return html(forClubsPage({ origin, page, total: all.length }));
   if (p === "/padel-prices") return html(pricesIndex({ origin, venues: all, towns, esc, page, year }));
   if (p.startsWith("/padel-prices/")) {

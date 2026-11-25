@@ -33,7 +33,7 @@ export function newsBody(items, esc, kind = "") {
 <p>New clubs opening, planning decisions and the biggest padel stories from around Britain. Each story is our quick summary, with a link to the full report.</p>
 <nav class="chips" aria-label="Filter news"><a href="/news"${kind ? "" : ' class="on"'}>All</a>${Object.entries(KINDS).map(([k, l]) => `<a href="/news?type=${k}"${kind === k ? ' class="on"' : ""}>${l}</a>`).join("")}</nav>
 ${list.length ? list.map(n => newsCard(n, esc)).join("") : "<p>No stories here yet. Check back soon.</p>"}
-<p class="muted">Know about a new club or court? <a href="/#add">Tell us</a> and we'll add it. <a href="/news.xml">RSS feed</a></p>`;
+<p class="muted">Know about a new club or court? <a href="/add">Tell us</a> and we'll add it. <a href="/news.xml">RSS feed</a></p>`;
 }
 
 export function newsRss(origin, items, esc) {

@@ -68,3 +68,7 @@ CREATE INDEX IF NOT EXISTS news_pub ON news(status, published);
 
 -- Towns with their own "Padel courts in <town>" page. Coordinates are filled from postcodes.io by /api/towns.
 CREATE TABLE IF NOT EXISTS towns (slug TEXT PRIMARY KEY, name TEXT NOT NULL, region TEXT, lat REAL, lng REAL, tries INTEGER DEFAULT 0, note TEXT);
+
+-- Contact form messages and new-court alert sign-ups (tables are also created on first use).
+CREATE TABLE IF NOT EXISTS messages (id TEXT PRIMARY KEY, name TEXT, email TEXT, topic TEXT, message TEXT, ip TEXT, created INTEGER);
+CREATE TABLE IF NOT EXISTS alerts (id TEXT PRIMARY KEY, email TEXT NOT NULL, place TEXT, lat REAL, lng REAL, radius INTEGER DEFAULT 15, consent TEXT, status TEXT DEFAULT 'active', ip TEXT, created INTEGER, UNIQUE(email, place));

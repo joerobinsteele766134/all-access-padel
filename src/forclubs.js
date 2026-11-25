@@ -44,13 +44,13 @@ export function forClubsPage({ origin, page, total }) {
 <h2>Get featured</h2>
 <p>Featured clubs appear first for players searching nearby and at the top of their area and town pages. To ask about a featured spot, claim your listing and tick <b>"I'm interested in a featured listing"</b>, and we'll be in touch.</p>
 <h2>Spotted something wrong?</h2>
-<p>Use the <a href="/#add">add a court or deal</a> form, or claim your listing to fix it yourself. Every change is checked before it goes live.</p>
+<p>Use the <a href="/add">add a court or deal</a> form, or claim your listing to fix it yourself. Every change is checked before it goes live.</p>
 <script>
 const $=id=>document.getElementById(id);let V=[],cur=null;
 const esc=s=>String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 fetch("/api/venues").then(r=>r.json()).then(d=>{V=Array.isArray(d)?d:[];const id=new URLSearchParams(location.search).get("venue");if(id){const v=V.find(x=>x.id===id);if(v)pick(v)}});
 $("clubq").addEventListener("input",e=>{const q=e.target.value.trim().toLowerCase();if(q.length<2){$("matches").innerHTML="";return}
-$("matches").innerHTML=V.filter(v=>(v.name+" "+(v.postcode||"")).toLowerCase().includes(q)).slice(0,8).map(v=>'<button type="button" data-id="'+esc(v.id)+'">'+esc(v.name)+' <span class="muted">'+esc(v.postcode||"")+'</span></button>').join("")||'<p class="muted">No match. Try a shorter name, or <a href="/#add">add your club</a>.</p>'});
+$("matches").innerHTML=V.filter(v=>(v.name+" "+(v.postcode||"")).toLowerCase().includes(q)).slice(0,8).map(v=>'<button type="button" data-id="'+esc(v.id)+'">'+esc(v.name)+' <span class="muted">'+esc(v.postcode||"")+'</span></button>').join("")||'<p class="muted">No match. Try a shorter name, or <a href="/add">add your club</a>.</p>'});
 $("matches").addEventListener("click",e=>{const b=e.target.closest("button");if(b)pick(V.find(v=>v.id===b.dataset.id))});
 function pick(v){cur=v;$("out").hidden=false;$("matches").innerHTML="";$("clubq").value=v.name;$("chosen").textContent="Badge for "+v.name;code()}
 function code(){if(!cur)return;const s=$("style").value;$("code").value='<a href="${origin}/venues/'+encodeURIComponent(cur.id)+'" title="'+esc(cur.name)+' on All Access Padel"><img src="${origin}/badge.svg'+(s==="dark"?"?style=dark":"")+'" width="220" height="64" alt="Find us on All Access Padel"></a>'}
