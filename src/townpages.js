@@ -6,6 +6,7 @@ import { TOWN_LIST } from "./towns.js";
 const miles = (a, b, c, d) => { const R = 3959, r = x => x * Math.PI / 180, dl = r(c - a), dg = r(d - b), h = Math.sin(dl / 2) ** 2 + Math.cos(r(a)) * Math.cos(r(c)) * Math.sin(dg / 2) ** 2; return 2 * R * Math.asin(Math.sqrt(h)); };
 const RANK = { City: 0, Town: 1, "Other Settlement": 2, "Suburban Area": 3, Village: 4, Hamlet: 5 };
 const norm = s => String(s || "").toLowerCase().replace(/[^a-z]/g, "");
+const reg = s => ({ eastofengland: "eastern" }[norm(s)] || norm(s));
 
 // Price text like "£24–£38 per court/hr" or "£7–£8 per player/hr" → court-per-hour [min, max] in £.
 export function courtPrice(p) {
@@ -31,7 +32,7 @@ export async function resolveTowns(env, limit = 25) {
     try {
       const r = await fetch(`https://api.postcodes.io/places?q=${encodeURIComponent(t.name)}&limit=25`);
       const j = await r.json();
-      const cands = (j.result || []).filter(p => RANK[p.local_type] !== undefined && (norm(p.region) === norm(t.region) || norm(p.country) === norm(t.region)));
+      const cands = (j.result || []).filter(p => RANK[p.local_type] !== undefined && (reg(p.region) === reg(t.region) || reg(p.country) === reg(t.region)));
       const exact = cands.filter(p => norm(p.name_1) === norm(t.name));
       hit = (exact.length ? exact : cands).sort((a, b) => RANK[a.local_type] - RANK[b.local_type])[0] || null;
       note = hit ? `${hit.name_1} (${hit.local_type}, ${hit.county_unitary || hit.district_borough || hit.region || hit.country})` : "no match";
