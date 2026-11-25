@@ -16,6 +16,7 @@ export const GUIDES = [
     body: (ctx) => `
 <p class="lead"><b>Short answer:</b> expect to pay about <b>£27 an hour for a court off-peak</b>, which is around <b>£7 each</b> when four of you split it. Evenings, weekends and premium indoor clubs cost more, and London is the most expensive place to play.</p>
 
+<p><b>Compare real prices:</b> see <a href="/padel-prices">published court prices at UK clubs, cheapest first</a>, with city-by-city comparisons.</p>
 <h2>Average padel prices in the UK</h2>
 <p>The LTA, which runs padel in Britain, says an average off-peak court booking costs ${src("https://www.ltapadel.org.uk/news/2026/march/860000-players-lta-unveils-latest-figures-on-growth-of-padel-in-britain/", "£7 per person per hour, or £27 an hour for a doubles booking")}.</p>
 <p>Prices vary a lot by venue. Property adviser Savills found ${src("https://www.savills.co.uk/research_articles/166219/388810-0", "off-peak rates from £18.50 to £48.80 an hour, with peak rates up to £72.50")}.</p>

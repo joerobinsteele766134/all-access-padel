@@ -224,7 +224,7 @@ footer p{max-width:75ch;margin:0 0 8px}
 <nav>
   <div class="wrap">
     <a class="brand" href="#top" aria-label="All Access Padel home"><svg><use href="#logo"/></svg><b>ALL ACCESS <i>PADEL</i></b></a>
-    <div class="links"><a href="#courts">Courts</a><a href="#map">Map</a><a href="#guide">New to padel</a><a href="#deals">Deals</a><a href="#add">Add a court</a><a href="/padel">Towns</a><a href="/guides/padel-rules">Rules</a><a href="/guides">Guides</a><a href="/news">News</a><a href="/kit" class="shoplink">Kit shop</a></div>
+    <div class="links"><a href="#courts">Courts</a><a href="#map">Map</a><a href="#guide">New to padel</a><a href="#deals">Deals</a><a href="#add">Add a court</a><a href="/padel">Towns</a><a href="/padel-prices">Prices</a><a href="/guides/padel-rules">Rules</a><a href="/guides">Guides</a><a href="/news">News</a><a href="/kit" class="shoplink">Kit shop</a></div>
   </div>
 </nav>
 
@@ -376,6 +376,7 @@ footer p{max-width:75ch;margin:0 0 8px}
       <div class="panel">
         <h3 class="disp" style="font-size:28px;margin-bottom:6px">Run a padel club?</h3>
         <p style="margin:0 0 10px">Claim your listing to update your details, prices, hours and offers yourself, and ask about a Featured spot at the top of your area. Find your venue in the list above, open it, and tap <b>Claim this venue</b>.</p>
+        <a class="btn n" href="/for-clubs">Club owners: start here</a>
       </div>
     </div>
   </div>
@@ -418,7 +419,7 @@ footer p{max-width:75ch;margin:0 0 8px}
   <div class="wrap">
     <svg width="56" height="56" aria-hidden="true"><use href="#logo"/></svg>
     <div>
-      <p><b style="color:#fff">All Access Padel</b> · Padel courts across Britain · <a href="/padel-courts" style="color:#fff">Courts by area</a> · <a href="/guides" style="color:#fff">Guides</a> · <a href="/kit" style="color:#fff">Kit shop</a></p>
+      <p><b style="color:#fff">All Access Padel</b> · Padel courts across Britain · <a href="/padel-courts" style="color:#fff">Courts by area</a> · <a href="/padel" style="color:#fff">By town</a> · <a href="/padel-prices" style="color:#fff">Padel prices</a> · <a href="/for-clubs" style="color:#fff">For clubs</a> · <a href="/guides" style="color:#fff">Guides</a> · <a href="/kit" style="color:#fff">Kit shop</a></p>
       <p>Distances are in a straight line from your postcode, so the drive will be a bit further. Court details for Witney Lakes and Estelle Manor come from a directory listing, so give them a call first. Prices and offers change, so check with the venue before you go.</p>
       <p>Venue list built from the LTA's padel court finder, plus local research. Prices are taken from venues' own published rates where we could find them, and change often.</p>
       <p>We're independent and not connected to any of the venues listed. Your location stays in your browser and is never sent to us.</p>
@@ -535,7 +536,7 @@ function renderCourts(){
   $("count").textContent=all.length?`Showing ${list.length} of ${all.length} venues, nearest first`:"";
   const cards=list.map(card);
   if(!n&&!query&&cards.length>9)cards.splice(9,0,`<a class="card adcard kitcard" href="/kit" style="text-decoration:none;color:inherit"><h3 class="disp" style="font-size:26px">Kit up for padel</h3><p>The rackets, balls and shoes UK experts recommend, from first racket to pro.</p><span class="btn y" style="align-self:flex-start">Visit the kit shop</span></a>`);
-  if(!n&&!query&&cards.length>3)cards.splice(3,0,`<a class="card adcard" href="#add" style="text-decoration:none;color:inherit"><h3 class="disp" style="font-size:26px">Your club here</h3><p>Run a padel club? Get featured in front of local players. Open any venue page and tap "Claim this venue".</p><span class="btn n" style="align-self:flex-start">Get featured</span></a>`);
+  if(!n&&!query&&cards.length>3)cards.splice(3,0,`<a class="card adcard" href="/for-clubs" style="text-decoration:none;color:inherit"><h3 class="disp" style="font-size:26px">Your club here</h3><p>Run a padel club? Get featured in front of local players. Open any venue page and tap "Claim this venue".</p><span class="btn n" style="align-self:flex-start">Get featured</span></a>`);
   $("grid").innerHTML=cards.length?cards.join(""):(V.length?`<div class="empty">Nothing matches that. Try another search or filter.</div>`:`<div class="empty">Loading courts…</div>`);
   $("more").hidden=all.length<=shown;
 }
