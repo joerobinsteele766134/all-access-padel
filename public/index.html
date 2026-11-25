@@ -79,7 +79,9 @@ h3{margin:0}
 .fsel select{display:block;width:100%;margin-top:4px;min-height:42px;font:500 15px Barlow,sans-serif;border:2px solid var(--line);border-radius:4px;background:var(--card);color:var(--ink);padding:0 8px}
 .fpanel fieldset{border:0;border-top:2px dashed var(--line);padding:10px 0 4px;margin:0}
 .fpanel legend{font-weight:800;font-size:13px;text-transform:uppercase;letter-spacing:.04em;padding:0 0 4px;color:var(--muted)}
-.fpanel fieldset label{display:flex;align-items:center;gap:10px;min-height:34px;font-size:15px;cursor:pointer}
+.fpanel fieldset label{display:flex;align-items:center;gap:10px;min-height:32px;margin:0;padding:0;font-size:15px;font-weight:500;cursor:pointer}
+.fpanel fieldset label input{margin:0;min-height:0;padding:0}
+.fpanel fieldset label{min-height:30px!important}
 .fpanel input[type=checkbox]{width:20px;height:20px;accent-color:var(--court);flex:none}
 .activef{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 10px}
 .activef button{font:700 13px Barlow,sans-serif;border:0;border-radius:999px;background:var(--navy);color:var(--ball);padding:6px 12px;cursor:pointer}
@@ -124,7 +126,9 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .shopcats{display:flex;gap:8px;overflow-x:auto;margin:0 0 20px;padding-bottom:4px}
 .shopcats a{flex:none;color:#fff;text-decoration:none;font-weight:700;border:2px solid #3b4f86;border-radius:999px;padding:8px 14px}
 .shopcats a:hover{background:var(--ball);color:var(--navy);border-color:var(--ball)}
-.kpgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));gap:16px}
+.kpgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+@media(max-width:980px){.kpgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:480px){.kpgrid{grid-template-columns:1fr 1fr;gap:10px}.kpbuy{font-size:13px;min-height:40px;white-space:nowrap}.kpimg span{font-size:10px;top:6px;left:6px}.kpinfo{padding:10px}.kpinfo p:not(.kpcat){display:none}.kpinfo h3{font-size:18px}}
 .kp{background:#fff;color:#0d1b3d;border-radius:8px;overflow:hidden;display:flex;flex-direction:column;transition:transform .15s}
 .kp:hover{transform:translateY(-4px)}
 .kpimg{background:#eef3ff;aspect-ratio:4/3;display:grid;place-items:center;position:relative}
@@ -292,7 +296,7 @@ footer p{max-width:75ch;margin:0 0 8px}
       <p class="sub">The rackets, balls and shoes UK experts recommend, picked for beginners through to club players.</p></div>
       <a class="btn y big" href="/kit">Browse the kit shop</a>
     </div>
-    <nav class="shopcats" aria-label="Kit shop categories"><a href="/kit#rackets">Rackets</a><a href="/kit#balls">Balls</a><a href="/kit#shoes">Shoes</a><a href="/kit#bags">Bags &amp; covers</a><a href="/kit#accessories">Accessories</a><a href="/guides/best-beginner-padel-rackets">Racket buying guide</a></nav>
+    <div class="shopcats" role="navigation" aria-label="Kit shop categories"><a href="/kit#rackets">Rackets</a><a href="/kit#balls">Balls</a><a href="/kit#shoes">Shoes</a><a href="/kit#bags">Bags &amp; covers</a><a href="/kit#accessories">Accessories</a><a href="/guides/best-beginner-padel-rackets">Racket buying guide</a></div>
     <div class="kpgrid">
       <article class="kp"><a class="kpimg" href="/kit#rackets" aria-label="Adidas Match Light 2026 in the kit shop"><span>Best first racket</span><svg viewBox="0 0 120 120" aria-hidden="true"><defs><clipPath id="hprackets0"><path d="M60 6C82 6 96 24 96 44C96 66 80 82 60 82C40 82 24 66 24 44C24 24 38 6 60 6Z" transform="translate(60 45) scale(.84) translate(-60 -45)"/></clipPath></defs>
 <path d="M50 78L54 92H66L70 78z" fill="#0d1b3d"/><rect x="53" y="88" width="14" height="28" rx="5" fill="#0d1b3d"/><rect x="53" y="96" width="14" height="20" rx="5" fill="#2a9df4"/>

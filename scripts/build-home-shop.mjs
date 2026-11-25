@@ -19,7 +19,7 @@ const block = `<!--SHOP:START-->
       <p class="sub">The rackets, balls and shoes UK experts recommend, picked for beginners through to club players.</p></div>
       <a class="btn y big" href="/kit">Browse the kit shop</a>
     </div>
-    <nav class="shopcats" aria-label="Kit shop categories">${KIT.map(c => `<a href="/kit#${c.id}">${esc(c.name)}</a>`).join("")}<a href="/guides/best-beginner-padel-rackets">Racket buying guide</a></nav>
+    <div class="shopcats" role="navigation" aria-label="Kit shop categories">${KIT.map(c => `<a href="/kit#${c.id}">${esc(c.name)}</a>`).join("")}<a href="/guides/best-beginner-padel-rackets">Racket buying guide</a></div>
     <div class="kpgrid">
       ${cards}
     </div>
