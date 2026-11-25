@@ -21,5 +21,5 @@
   ],
   "vars": { "AMAZON_TAG": "allaccesspadel-21" },
   "observability": { "enabled": true },
-  "triggers": { "crons": ["30 9 * * *"] }
+  "triggers": { "crons": ["30 9 * * *", "15 11 * * 1-5"] }
 }

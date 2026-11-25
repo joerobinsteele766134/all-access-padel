@@ -10,11 +10,13 @@ import * as news from "./api/news.js";
 import * as towns from "./api/towns.js";
 import * as contact from "./api/contact.js";
 import * as alerts from "./api/alerts.js";
+import * as outreach from "./api/outreach.js";
+import { runOutreach } from "./outreach.js";
 import { json } from "../lib/shared.js";
 import { seoRoute } from "./seo.js";
 import { runAlerts } from "./alertsjob.js";
 
-const routes = { "/api/submissions": submissions, "/api/admin": admin, "/api/venues": venues, "/api/import": importer, "/api/reviews": reviews, "/api/claims": claims, "/api/club": club, "/api/news": news, "/api/towns": towns, "/api/contact": contact, "/api/alerts": alerts };
+const routes = { "/api/submissions": submissions, "/api/admin": admin, "/api/venues": venues, "/api/import": importer, "/api/reviews": reviews, "/api/claims": claims, "/api/club": club, "/api/news": news, "/api/towns": towns, "/api/contact": contact, "/api/alerts": alerts, "/api/outreach": outreach };
 
 export default {
   async fetch(request, env, ctx) {
@@ -39,6 +41,7 @@ export default {
     return env.ASSETS.fetch(request);
   },
   async scheduled(event, env, ctx) {
+    if (event.cron === "15 11 * * 1-5") { ctx.waitUntil(runOutreach(env).then(r => console.log("outreach", JSON.stringify(r))).catch(e => console.error("outreach job", e))); return; }
     ctx.waitUntil(runAlerts(env).then(r => console.log("alerts", JSON.stringify(r))).catch(e => console.error("alerts job", e)));
   },
 };
