@@ -224,7 +224,7 @@ footer p{max-width:75ch;margin:0 0 8px}
 <nav>
   <div class="wrap">
     <a class="brand" href="#top" aria-label="All Access Padel home"><svg><use href="#logo"/></svg><b>ALL ACCESS <i>PADEL</i></b></a>
-    <div class="links"><a href="#courts">Courts</a><a href="#map">Map</a><a href="#guide">New to padel</a><a href="#deals">Deals</a><a href="#add">Add a court</a><a href="/padel-courts">Areas</a><a href="/guides/padel-rules">Rules</a><a href="/guides">Guides</a><a href="/news">News</a><a href="/kit" class="shoplink">Kit shop</a></div>
+    <div class="links"><a href="#courts">Courts</a><a href="#map">Map</a><a href="#guide">New to padel</a><a href="#deals">Deals</a><a href="#add">Add a court</a><a href="/padel">Towns</a><a href="/guides/padel-rules">Rules</a><a href="/guides">Guides</a><a href="/news">News</a><a href="/kit" class="shoplink">Kit shop</a></div>
   </div>
 </nav>
 
@@ -407,10 +407,10 @@ footer p{max-width:75ch;margin:0 0 8px}
 
 <section class="band" id="areas" aria-labelledby="ah">
   <div class="wrap">
-    <h2 class="disp" id="ah">Browse padel courts by area</h2>
+    <h2 class="disp" id="ah">Browse padel courts by town</h2>
     <p class="sub">Every area of England, Scotland and Wales with a padel court, each with its own page of venues, court types, prices and booking links.</p>
-    <p><a class="btn n" href="/padel-courts">See all areas</a></p>
-    <p class="sub" style="margin-top:14px">Popular: <a href="/padel-courts/oxford">Oxford</a> · <a href="/padel-courts/west-oxfordshire">West Oxfordshire</a> · <a href="/padel-courts/birmingham">Birmingham</a> · <a href="/padel-courts/manchester">Manchester</a> · <a href="/padel-courts/leeds">Leeds</a> · <a href="/padel-courts/bristol-city-of">Bristol</a> · <a href="/padel-courts/city-of-edinburgh">Edinburgh</a> · <a href="/padel-courts/cardiff">Cardiff</a> · <a href="/padel-courts/glasgow-city">Glasgow</a></p>
+    <p><a class="btn n" href="/padel">Find your town</a> <a class="btn n" href="/padel-courts">See all areas</a></p>
+    <p class="sub" style="margin-top:14px">Popular: <a href="/padel/london">London</a> · <a href="/padel/oxford">Oxford</a> · <a href="/padel/witney">Witney</a> · <a href="/padel/birmingham">Birmingham</a> · <a href="/padel/manchester">Manchester</a> · <a href="/padel/leeds">Leeds</a> · <a href="/padel/bristol">Bristol</a> · <a href="/padel/edinburgh">Edinburgh</a> · <a href="/padel/cardiff">Cardiff</a> <a href="/padel/glasgow">Glasgow</a> · <a href="/padel/brighton">Brighton</a> · <a href="/padel/cheltenham">Cheltenham</a></p>
   </div>
 </section>
 
@@ -594,7 +594,9 @@ function refresh(){$("locName").textContent=me.name;if(V.length)populate();rende
 fetch("/api/news?limit=4").then(r=>r.json()).then(d=>{const L={opening:"New club",planning:"Planning",news:"News",event:"Event"};$("newsList").innerHTML=(Array.isArray(d)&&d.length)?d.map(n=>`<a class="step" href="${n.venue_id?"/venues/"+encodeURIComponent(n.venue_id):"/news"}" style="color:inherit;text-decoration:none"><p style="margin:0 0 4px;font-size:13px"><b>${esc(L[n.kind]||"News")}</b> · ${esc(new Date(n.published+"T12:00:00Z").toLocaleDateString("en-GB",{day:"numeric",month:"short"}))}${n.area?" · "+esc(n.area):""}</p><h3>${esc(n.title)}</h3><p>${esc(n.summary)}</p></a>`).join(""):`<p class="muted">No news yet.</p>`}).catch(()=>{$("newsList").innerHTML=`<p class="muted">Couldn't load the news.</p>`});
 fetch("/api/venues?v=4").then(r=>r.json()).then(d=>{V=(Array.isArray(d)?d:[]).map(r=>{const t=(r.tags||"").split(",").map(s=>s.trim()).filter(Boolean);const c=(r.courts||"").toLowerCase();if(c.includes("indoor"))t.push("indoor");if(c.includes("covered"))t.push("covered");if(c.split(",").some(x=>x.trim()==="outdoor"))t.push("outdoor");if(r.price)t.push("price");if(r.deal)t.push("deal");if(r.lta)t.push("lta");if(r.book_url)t.push("book");const fac=(r.facilities||"").split(",").map(x=>x.trim()).filter(x=>FAC[x]);fac.forEach(f=>t.push(f==="bar"?"cafe":f));if(r.rating>=4)t.push("rated");return{id:r.id,n:r.name,a:[r.district,r.postcode].filter(Boolean).join(" · "),pc:r.postcode,lat:+r.lat,lng:+r.lng,courts:r.courts,lta:!!r.lta,url:r.url,email:r.email,tel:r.tel,about:r.about,deal:r.deal,price:r.price,price_note:r.price_note,pick:!!r.pick,flag:r.flag,book:r.book_url,fac,hours:r.hours,rating:r.rating,reviews:r.reviews,featured:!!r.featured,t}}).filter(v=>isFinite(v.lat)&&isFinite(v.lng));refresh()}).catch(()=>{$("grid").innerHTML=`<div class="empty">Couldn't load the court list. Refresh to try again.</div>`});
 let asked=false;try{asked=!!localStorage.getItem("aap-loc")}catch(e){}
-if(!asked)openModal();
+const qLoc=new URLSearchParams(location.search).get("loc");
+if(qLoc){lookup(qLoc.slice(0,60)).then(r=>{if(r)setLoc(r);else if(!asked)openModal()})}
+else if(!asked)openModal();
 }
 </script>
 </body>

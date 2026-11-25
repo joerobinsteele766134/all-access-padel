@@ -2,6 +2,7 @@
 // /venues/:id, /padel-courts, /padel-courts/:area, /sitemap.xml, /llms.txt
 import { GUIDES } from "./guides.js";
 import { KIT, kitBody } from "./kit.js";
+import { loadTowns, townPage, townsIndex, townsWithCourts, nearestTowns } from "./townpages.js";
 import { latestNews, newsBody, newsRss, newsCard, NEWS_CSS, KINDS } from "./news.js";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 export const slug = s => String(s || "").toLowerCase().normalize("NFKD").replace(/&/g, " and ").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -20,10 +21,10 @@ async function allVenues(env) {
   return results;
 }
 
-const page = ({ origin, path, title, description, body, jsonld = [] }) => `<!DOCTYPE html>
+const page = ({ origin, path, title, description, body, jsonld = [], robots = "" }) => `<!DOCTYPE html>
 <html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)}</title>
-<meta name="description" content="${esc(description)}">
+<meta name="description" content="${esc(description)}">${robots ? `<meta name="robots" content="${robots}">` : ""}
 <link rel="canonical" href="${origin}${path}"><link rel="alternate" type="application/rss+xml" title="UK padel news" href="/news.xml">
 <meta property="og:type" content="website"><meta property="og:site_name" content="All Access Padel">
 <meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(description)}"><meta property="og:url" content="${origin}${path}">
@@ -63,7 +64,7 @@ ${jsonld.map(j => `<script type="application/ld+json">${JSON.stringify(j).replac
 </head><body>
 <header><a href="/">ALL ACCESS <i>PADEL</i></a></header>
 <main>${body}</main>
-<footer><p><a href="/">Find padel courts near you</a> · <a href="/padel-courts">Padel courts by area</a> · <a href="/guides">Guides</a> · <a href="/kit">Kit shop</a> · <a href="/news">News</a></p>
+<footer><p><a href="/">Find padel courts near you</a> · <a href="/padel">Padel by town</a> · <a href="/padel-courts">Padel courts by area</a> · <a href="/guides">Guides</a> · <a href="/kit">Kit shop</a> · <a href="/news">News</a></p>
 <p>Venue list built from the LTA's padel court finder plus our own research. Prices change often, so check with the venue before you go. All Access Padel is independent and not connected to the venues listed.</p></footer>
 </body></html>`;
 
@@ -232,7 +233,7 @@ export async function seoRoute(request, env) {
   const url = new URL(request.url), p = url.pathname.replace(/\/+$/, "") || "/", origin = url.origin;
   if (p === "/rules" || p === "/padel-rules") return Response.redirect(`${origin}/guides/padel-rules`, 301);
   if (p === "/shop") return Response.redirect(`${origin}/kit`, 301);
-  if (!(p === "/padel-courts" || p.startsWith("/padel-courts/") || p.startsWith("/venues/") || p === "/guides" || p.startsWith("/guides/") || p === "/kit" || p === "/news" || p === "/news.xml" || p === "/sitemap.xml" || p === "/llms.txt" || p === "/robots.txt")) return null;
+  if (!(p === "/padel" || p.startsWith("/padel/") || p === "/padel-courts" || p.startsWith("/padel-courts/") || p.startsWith("/venues/") || p === "/guides" || p.startsWith("/guides/") || p === "/kit" || p === "/news" || p === "/news.xml" || p === "/sitemap.xml" || p === "/llms.txt" || p === "/robots.txt")) return null;
   if (p === "/robots.txt") return new Response(`# All Access Padel welcomes search engines and AI assistants.
 User-agent: *
 Allow: /
@@ -263,9 +264,10 @@ Sitemap: ${origin}/sitemap.xml
   if (!env.DB) return null;
   const all = await allVenues(env);
   const areas = areaGroups(all);
+  const towns = await loadTowns(env);
 
   if (p === "/sitemap.xml") {
-    const urls = [`${origin}/`, `${origin}/padel-courts`, `${origin}/guides`, `${origin}/kit`, `${origin}/news`, ...GUIDES.map(g => `${origin}/guides/${g.slug}`), ...areas.map(a => `${origin}/padel-courts/${a.slug}`), ...all.map(v => `${origin}/venues/${v.id}`)];
+    const urls = [`${origin}/`, `${origin}/padel-courts`, `${origin}/guides`, `${origin}/kit`, `${origin}/news`, `${origin}/padel`, ...GUIDES.map(g => `${origin}/guides/${g.slug}`), ...townsWithCourts(towns, all).map(t => `${origin}/padel/${t.slug}`), ...areas.map(a => `${origin}/padel-courts/${a.slug}`), ...all.map(v => `${origin}/venues/${v.id}`)];
     const body = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(u => `<url><loc>${esc(u)}</loc></url>`).join("\n")}\n</urlset>`;
     return new Response(body, { headers: { "content-type": "application/xml", "cache-control": "public, max-age=3600" } });
   }
@@ -278,6 +280,7 @@ The venue list is built from the LTA's padel court finder plus our own research.
 
 ## Key pages
 - [Find padel courts near a postcode](${origin}/): interactive search, map and filters
+- [Padel courts by town](${origin}/padel): a page for every UK town and city, listing the nearest padel courts with indoor options, prices and booking links
 - [Padel courts by area](${origin}/padel-courts): every area with a padel venue, grouped by country
 - [Sitemap](${origin}/sitemap.xml): every venue and area page
 
@@ -294,6 +297,14 @@ ${areas.map(a => `- [Padel courts in ${a.name}](${origin}/padel-courts/${a.slug}
     return new Response(body, { headers: { "content-type": "text/plain; charset=utf-8", "cache-control": "public, max-age=3600" } });
   }
   if (p === "/padel-courts") return html(indexPage(origin, areas, all.length));
+  if (p === "/padel") return html(townsIndex({ origin, towns, venues: all, esc, page }));
+  if (p.startsWith("/padel/")) {
+    const t = towns.find(x => x.slug === p.slice(7));
+    if (!t) return null;
+    const near = all.map(v => ({ v, d: miles(t.lat, t.lng, v.lat, v.lng) })).sort((a, b) => a.d - b.d)[0];
+    const area = near && near.d < 15 ? areas.find(a => a.slug === slug(near.v.district)) : null;
+    return html(townPage({ origin, t, venues: all, towns, esc, page, year, appOf, area }));
+  }
   if (p === "/guides") return html(guidesIndex(origin));
   if (p === "/news" || p === "/news.xml") {
     const items = await latestNews(env, 200);
@@ -315,14 +326,21 @@ ${areas.map(a => `- [Padel courts in ${a.name}](${origin}/padel-courts/${a.slug}
   }
   if (p.startsWith("/padel-courts/")) {
     const a = areas.find(x => x.slug === p.slice(14));
-    return a ? html(areaPage(origin, a, all)) : null;
+    if (!a) return null;
+    const c = a.venues.reduce((s, v) => ({ lat: s.lat + v.lat / a.venues.length, lng: s.lng + v.lng / a.venues.length }), { lat: 0, lng: 0 });
+    const nt = nearestTowns(c.lat, c.lng, towns, 6);
+    let out = areaPage(origin, a, all);
+    if (nt.length) out = out.replace("</main>", `<h2>Padel by town near ${esc(a.name)}</h2><ul class="cols">${nt.map(t => `<li><a href="/padel/${esc(t.slug)}">Padel in ${esc(t.name)}</a></li>`).join("")}</ul></main>`);
+    return html(out);
   }
   if (p.startsWith("/venues/")) {
     const v = all.find(x => x.id === decodeURIComponent(p.slice(8)));
     if (!v) return null;
     const { results: reviews } = await env.DB.prepare("SELECT rating, title, body, name, created FROM reviews WHERE venue_id = ? AND status = 'approved' ORDER BY created DESC LIMIT 50").bind(v.id).all();
     const vnews = await latestNews(env, 5, v.id);
-    const out = venuePage(origin, v, all, reviews);
+    const nt = nearestTowns(v.lat, v.lng, towns, 4);
+    let out = venuePage(origin, v, all, reviews);
+    if (nt.length) out = out.replace("</main>", `<h2>Padel in nearby towns</h2><ul class="cols">${nt.map(t => `<li><a href="/padel/${esc(t.slug)}">Padel in ${esc(t.name)}</a> <span class="muted">(${Math.round(t.d)} miles)</span></li>`).join("")}</ul></main>`);
     return html(vnews.length ? out.replace("</main>", `${NEWS_CSS}<h2>In the news</h2>${vnews.map(n => newsCard(n, esc)).join("")}</main>`) : out, 300);
   }
   return null;

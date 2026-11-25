@@ -65,3 +65,6 @@ CREATE TABLE IF NOT EXISTS venue_edits (id TEXT PRIMARY KEY, venue_id TEXT NOT N
 -- UK padel news: our own short summaries linking to the original story
 CREATE TABLE IF NOT EXISTS news (id TEXT PRIMARY KEY, title TEXT NOT NULL, summary TEXT NOT NULL, url TEXT NOT NULL, source TEXT NOT NULL, published TEXT NOT NULL, kind TEXT DEFAULT 'news', area TEXT, venue_id TEXT, status TEXT DEFAULT 'live', created INTEGER);
 CREATE INDEX IF NOT EXISTS news_pub ON news(status, published);
+
+-- Towns with their own "Padel courts in <town>" page. Coordinates are filled from postcodes.io by /api/towns.
+CREATE TABLE IF NOT EXISTS towns (slug TEXT PRIMARY KEY, name TEXT NOT NULL, region TEXT, lat REAL, lng REAL, tries INTEGER DEFAULT 0, note TEXT);
