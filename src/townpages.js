@@ -31,7 +31,7 @@ export async function resolveTowns(env, limit = 25) {
     try {
       const r = await fetch(`https://api.postcodes.io/places?q=${encodeURIComponent(t.name)}&limit=25`);
       const j = await r.json();
-      const cands = (j.result || []).filter(p => RANK[p.local_type] !== undefined && (p.region === t.region || p.country === t.region || (t.region === "London" && p.region === "London")));
+      const cands = (j.result || []).filter(p => RANK[p.local_type] !== undefined && (norm(p.region) === norm(t.region) || norm(p.country) === norm(t.region)));
       const exact = cands.filter(p => norm(p.name_1) === norm(t.name));
       hit = (exact.length ? exact : cands).sort((a, b) => RANK[a.local_type] - RANK[b.local_type])[0] || null;
       note = hit ? `${hit.name_1} (${hit.local_type}, ${hit.county_unitary || hit.district_borough || hit.region || hit.country})` : "no match";
