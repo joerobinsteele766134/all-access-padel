@@ -21,6 +21,7 @@ export function aboutPage({ origin, page, total }) {
 <div class="card3"><h3>Clubs and players</h3><p>Clubs claim their listings to keep details up to date, and players send in new courts, prices and deals. We check everything before it goes live.</p></div>
 <div class="card3"><h3>Weekly checks</h3><p>Every week we look for new clubs opening, planning decisions and padel news, and add new courts as they open.</p></div>
 </div>
+<p class="muted" style="font-size:14px">Some court locations come from <a href="https://www.openstreetmap.org/copyright" rel="noopener">OpenStreetMap</a> © OpenStreetMap contributors, available under the Open Database Licence. We check each one against the club's own information before listing it.</p>
 <p>Prices and offers change often, so always check with the venue before you go. Spotted a mistake? Use the form below or <a href="/add">tell us here</a>.</p>
 <h2>How the site is paid for</h2>
 <p>All Access Padel is free to use. It's paid for in two ways, and we're upfront about both:</p>
