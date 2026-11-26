@@ -1,6 +1,7 @@
 // Admin: moderate submissions, reviews, venue claims and club edits; feature venues.
 import { json, needDb } from "../../lib/shared.js";
 import { EDITABLE } from "./club.js";
+import { sendClaimLink } from "../claimemail.js";
 
 async function authorised(request, env) {
   const key = request.headers.get("x-admin-key") || "";
@@ -18,7 +19,7 @@ export async function onRequestGet({ request, env }) {
   const [submissions, reviews, claims, edits, featured, news, messages, alertCount, outreachStats] = await Promise.all([
     q("SELECT id, type, venue, details, contact, created, COALESCE(status,'pending') AS status FROM submissions ORDER BY (COALESCE(status,'pending')='pending') DESC, created DESC LIMIT 200"),
     q("SELECT r.id, r.venue_id, v.name AS venue, r.rating, r.title, r.body, r.name, r.status, r.created FROM reviews r LEFT JOIN venues v ON v.id = r.venue_id ORDER BY (r.status='pending') DESC, r.created DESC LIMIT 200"),
-    q("SELECT c.id, c.venue_id, v.name AS venue, v.url AS venue_url, c.name, c.role, c.email, c.phone, c.message, c.status, c.token, c.created FROM claims c LEFT JOIN venues v ON v.id = c.venue_id ORDER BY (c.status='pending') DESC, c.created DESC LIMIT 200"),
+    q("SELECT c.id, c.venue_id, v.name AS venue, v.url AS venue_url, c.name, c.role, c.email, c.phone, c.message, c.status, c.token, c.created, c.link_sent, c.link_error FROM claims c LEFT JOIN venues v ON v.id = c.venue_id ORDER BY (c.status='pending') DESC, c.created DESC LIMIT 200"),
     q("SELECT e.id, e.venue_id, v.name AS venue, e.data, e.status, e.created FROM venue_edits e LEFT JOIN venues v ON v.id = e.venue_id ORDER BY (e.status='pending') DESC, e.created DESC LIMIT 200"),
     q("SELECT id, name, featured_until FROM venues WHERE featured_until > strftime('%s','now')*1000 ORDER BY featured_until"),
     q("SELECT id, title, source, url, published, kind, venue_id FROM news ORDER BY published DESC LIMIT 100").catch(() => []),
@@ -52,7 +53,8 @@ export async function onRequestPatch({ request, env }) {
         env.DB.prepare("UPDATE claims SET status = 'approved', token = ? WHERE id = ?").bind(token, id),
         env.DB.prepare("UPDATE venues SET claimed = 1 WHERE id = ?").bind(c.venue_id),
       ]);
-      return json({ ok: true, link: `https://allaccesspadel.co.uk/club.html#${token}` });
+      const mail = await sendClaimLink(env, id); // emails the club its private link
+      return json({ ok: true, link: `https://allaccesspadel.co.uk/club.html#${token}`, emailed: !!mail.sent, emailError: mail.error || null });
     }
     await env.DB.prepare("UPDATE claims SET status = ?, token = NULL WHERE id = ?").bind(status, id).run();
     return json({ ok: true });
