@@ -51,7 +51,7 @@ button{font:700 16px Barlow,sans-serif;min-height:46px;border:0;border-radius:6p
 {
 const $=id=>document.getElementById(id);
 const token=location.hash.slice(1);
-const LABELS={parking:"Parking",changing:"Changing rooms",cafe:"Café",bar:"Bar",racket_hire:"Racket hire",floodlit:"Floodlit",open_late:"Open late",accessible:"Step-free access",shop:"Shop",coaching:"Coaching"};
+const LABELS={parking:"Parking",changing:"Changing rooms",cafe:"Café",bar:"Bar",racket_hire:"Racket hire",floodlit:"Floodlit",open_late:"Open late",accessible:"Step-free access",shop:"Shop",coaching:"Coaching",singles:"Singles court",pay_play:"Pay and play"};
 const F=["about","courts","hours","price","price_note","deal","url","book_url","tel","email"];
 (async()=>{
   if(token.length<30){$("msg").textContent="This link isn't complete. Check you copied the whole link.";return}

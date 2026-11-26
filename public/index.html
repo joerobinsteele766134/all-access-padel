@@ -89,6 +89,7 @@ h3{margin:0}
 .fpanel fieldset label{display:flex;align-items:center;gap:10px;min-height:32px;margin:0;padding:0;font-size:15px;font-weight:500;cursor:pointer}
 .fpanel fieldset label input{margin:0;min-height:0;padding:0}
 .fpanel fieldset label{min-height:30px!important}
+.fpanel label[hidden]{display:none!important}
 .fpanel input[type=checkbox]{width:20px;height:20px;accent-color:var(--court);flex:none}
 .activef{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 10px}
 .activef button{font:700 13px Barlow,sans-serif;border:0;border-radius:999px;background:var(--navy);color:var(--ball);padding:6px 12px;cursor:pointer}
@@ -293,6 +294,8 @@ footer p{max-width:75ch;margin:0 0 8px}
             <label><input type="checkbox" name="f" value="book"> Book online</label>
             <label><input type="checkbox" name="f" value="price"> Has a price</label>
             <label><input type="checkbox" name="f" value="deal"> Has a deal</label>
+            <label data-min="5"><input type="checkbox" name="f" value="pay_play"> Pay and play (no membership)</label>
+            <label data-min="5"><input type="checkbox" name="f" value="singles"> Singles court</label>
           </fieldset>
           <fieldset><legend>Facilities</legend>
             <label><input type="checkbox" name="f" value="parking"> Parking</label>
@@ -528,10 +531,10 @@ modal.addEventListener("keydown",e=>{let has=false;try{has=!!localStorage.getIte
 
 /* courts */
 const F=[["all","Everything"],["indoor","Indoor"],["covered","Covered"],["outdoor","Outdoor"],["rated","Top rated"],["price","Has a price"],["deal","Deals"],["book","Book online"],["parking","Parking"],["racket_hire","Racket hire"],["cafe","Café or bar"],["open_late","Open late"],["lta","LTA registered"]];
-const FAC={parking:"Parking",changing:"Changing rooms",cafe:"Café",bar:"Bar",racket_hire:"Racket hire",floodlit:"Floodlit",open_late:"Open late",accessible:"Step-free access",shop:"Shop",coaching:"Coaching"};
+const FAC={parking:"Parking",changing:"Changing rooms",cafe:"Café",bar:"Bar",racket_hire:"Racket hire",floodlit:"Floodlit",open_late:"Open late",accessible:"Step-free access",shop:"Shop",coaching:"Coaching",singles:"Singles court",pay_play:"Pay and play"};
 let shown=24,query="",fs={sort:"near",dist:0,type:[],f:[]};
 try{const s=JSON.parse(localStorage.getItem("aap-filters")||"null");if(s&&Array.isArray(s.type)&&Array.isArray(s.f))fs={sort:s.sort||"near",dist:+s.dist||0,type:s.type,f:s.f}}catch(e){}
-const LBL=Object.fromEntries([...F,["changing","Changing rooms"],["floodlit","Floodlit"],["coaching","Coaching"],["deal","Has a deal"],["rated","Rated 4★+"],["saved","My saved courts"]]);
+const LBL=Object.fromEntries([...F,["changing","Changing rooms"],["floodlit","Floodlit"],["coaching","Coaching"],["deal","Has a deal"],["rated","Rated 4★+"],["saved","My saved courts"],["pay_play","Pay and play"],["singles","Singles court"]]);
 const nActive=()=>fs.type.length+fs.f.length+(fs.dist?1:0);
 function syncForm(){const f=$("filters");f.sort.value=fs.sort;f.dist.value=String(fs.dist);f.querySelectorAll("input[name=type]").forEach(i=>i.checked=fs.type.includes(i.value));f.querySelectorAll("input[name=f]").forEach(i=>i.checked=fs.f.includes(i.value))}
 function readForm(){const f=$("filters");fs={sort:f.sort.value,dist:+f.dist.value,type:[...f.querySelectorAll("input[name=type]:checked")].map(i=>i.value),f:[...f.querySelectorAll("input[name=f]:checked")].map(i=>i.value)};try{localStorage.setItem("aap-filters",JSON.stringify(fs))}catch(e){}}
@@ -643,7 +646,7 @@ $("alForm").addEventListener("submit",async e=>{e.preventDefault();const s=$("al
   catch(err){s.textContent=err.message}});
 function refresh(){$("locName").textContent=me.name;$("alPlace").textContent=me.name==="your location"?"you":me.name;MV.set=false;sel=null;if(V.length)populate();renderCourts()}
 fetch("/api/news?limit=4").then(r=>r.json()).then(d=>{const L={opening:"New club",planning:"Planning",news:"News",event:"Event"};$("newsList").innerHTML=(Array.isArray(d)&&d.length)?d.map(n=>`<a class="step" href="${n.venue_id?"/venues/"+encodeURIComponent(n.venue_id):"/news"}" style="color:inherit;text-decoration:none"><p style="margin:0 0 4px;font-size:13px"><b>${esc(L[n.kind]||"News")}</b> · ${esc(new Date(n.published+"T12:00:00Z").toLocaleDateString("en-GB",{day:"numeric",month:"short"}))}${n.area?" · "+esc(n.area):""}</p><h3>${esc(n.title)}</h3><p>${esc(n.summary)}</p></a>`).join(""):`<p class="muted">No news yet.</p>`}).catch(()=>{$("newsList").innerHTML=`<p class="muted">Couldn't load the news.</p>`});
-fetch("/api/venues?v=4").then(r=>r.json()).then(d=>{V=(Array.isArray(d)?d:[]).map(r=>{const t=(r.tags||"").split(",").map(s=>s.trim()).filter(Boolean);const c=(r.courts||"").toLowerCase();if(c.includes("indoor"))t.push("indoor");if(c.includes("covered"))t.push("covered");if(c.split(",").some(x=>x.trim()==="outdoor"))t.push("outdoor");if(r.price)t.push("price");if(r.deal)t.push("deal");if(r.lta)t.push("lta");if(r.book_url)t.push("book");const fac=(r.facilities||"").split(",").map(x=>x.trim()).filter(x=>FAC[x]);fac.forEach(f=>t.push(f==="bar"?"cafe":f));if(r.rating>=4)t.push("rated");return{id:r.id,n:r.name,a:[r.district,r.postcode].filter(Boolean).join(" · "),pc:r.postcode,lat:+r.lat,lng:+r.lng,courts:r.courts,lta:!!r.lta,url:r.url,email:r.email,tel:r.tel,about:r.about,deal:r.deal,price:r.price,price_note:r.price_note,pick:!!r.pick,flag:r.flag,book:r.book_url,fac,hours:r.hours,rating:r.rating,reviews:r.reviews,featured:!!r.featured,t}}).filter(v=>isFinite(v.lat)&&isFinite(v.lng));refresh()}).catch(()=>{$("grid").innerHTML=`<div class="empty">Couldn't load the court list. Refresh to try again.</div>`});
+fetch("/api/venues?v=4").then(r=>r.json()).then(d=>{V=(Array.isArray(d)?d:[]).map(r=>{const t=(r.tags||"").split(",").map(s=>s.trim()).filter(Boolean);const c=(r.courts||"").toLowerCase();if(c.includes("indoor"))t.push("indoor");if(c.includes("covered"))t.push("covered");if(c.split(",").some(x=>x.trim()==="outdoor"))t.push("outdoor");if(r.price)t.push("price");if(r.deal)t.push("deal");if(r.lta)t.push("lta");if(r.book_url)t.push("book");const fac=(r.facilities||"").split(",").map(x=>x.trim()).filter(x=>FAC[x]);fac.forEach(f=>t.push(f==="bar"?"cafe":f));if(r.rating>=4)t.push("rated");if(t.includes("payplay"))t.push("pay_play");return{id:r.id,n:r.name,a:[r.district,r.postcode].filter(Boolean).join(" · "),pc:r.postcode,lat:+r.lat,lng:+r.lng,courts:r.courts,lta:!!r.lta,url:r.url,email:r.email,tel:r.tel,about:r.about,deal:r.deal,price:r.price,price_note:r.price_note,pick:!!r.pick,flag:r.flag,book:r.book_url,fac,hours:r.hours,rating:r.rating,reviews:r.reviews,featured:!!r.featured,t}}).filter(v=>isFinite(v.lat)&&isFinite(v.lng));document.querySelectorAll("#filters label[data-min]").forEach(l=>{const k=l.querySelector("input").value;l.hidden=V.filter(v=>v.t.includes(k)).length<+l.dataset.min});refresh()}).catch(()=>{$("grid").innerHTML=`<div class="empty">Couldn't load the court list. Refresh to try again.</div>`});
 let asked=false;try{asked=!!localStorage.getItem("aap-loc")}catch(e){}
 const qLoc=new URLSearchParams(location.search).get("loc");
 if(qLoc){lookup(qLoc.slice(0,60)).then(r=>{if(r)setLoc(r);else if(!asked)openModal()})}

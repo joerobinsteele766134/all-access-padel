@@ -12,7 +12,7 @@ export const slug = s => String(s || "").toLowerCase().normalize("NFKD").replace
 const miles = (a, b, c, d) => { const R = 3959, r = x => x * Math.PI / 180, dl = r(c - a), dg = r(d - b), h = Math.sin(dl / 2) ** 2 + Math.cos(r(a)) * Math.cos(r(c)) * Math.sin(dg / 2) ** 2; return 2 * R * Math.asin(Math.sqrt(h)); };
 const httpsUrl = u => { u = String(u || "").trim(); if (!u || /\s|@/.test(u) || !u.includes(".")) return ""; return /^https?:\/\//i.test(u) ? u.replace(/^http:/i, "https:") : "https://" + u; };
 const appOf = u => { const h = (u || "").toLowerCase(); return h.includes("playtomic") ? "Playtomic" : h.includes("matchi") ? "MATCHi" : h.includes("nettla") ? "Nettla" : (h.includes("clubspark") || h.includes("lta.org.uk")) ? "ClubSpark" : "the booking page"; };
-export const FAC = { parking: "Parking", changing: "Changing rooms", cafe: "Café", bar: "Bar", racket_hire: "Racket hire", floodlit: "Floodlit", open_late: "Open late", accessible: "Step-free access", shop: "Shop", coaching: "Coaching" };
+export const FAC = { parking: "Parking", changing: "Changing rooms", cafe: "Café", bar: "Bar", racket_hire: "Racket hire", floodlit: "Floodlit", open_late: "Open late", accessible: "Step-free access", shop: "Shop", coaching: "Coaching", singles: "Singles court", pay_play: "Pay and play" };
 const facList = f => String(f || "").split(",").map(x => x.trim()).filter(x => FAC[x]);
 const stars = n => "★★★★★".slice(0, Math.round(n)) + "☆☆☆☆☆".slice(0, 5 - Math.round(n));
 const year = () => new Date().getFullYear();

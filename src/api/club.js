@@ -4,7 +4,7 @@ import { json, clean, newId, needDb } from "../../lib/shared.js";
 import { mailJoe, background, ADMIN_URL } from "../../lib/mail.js";
 
 export const EDITABLE = ["about", "deal", "price", "price_note", "hours", "facilities", "url", "book_url", "tel", "email", "courts"];
-export const FACILITIES = ["parking", "changing", "cafe", "bar", "racket_hire", "floodlit", "open_late", "accessible", "shop", "coaching"];
+export const FACILITIES = ["parking", "changing", "cafe", "bar", "racket_hire", "floodlit", "open_late", "accessible", "shop", "coaching", "singles", "pay_play"];
 const httpsOnly = u => { u = clean(u, 300); return !u || /^https:\/\/[^\s]+\.[^\s]+$/i.test(u) ? u : null; };
 
 async function claimFor(request, env) {
