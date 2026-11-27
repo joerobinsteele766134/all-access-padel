@@ -53,6 +53,9 @@ You're getting this one-off email because your club is listed on All Access Pade
 export async function runOutreach(env, limit = PER_DAY) {
   if (!env.DB || !env.BREVO_KEY) return { skipped: "no DB or BREVO_KEY" };
   await ensureOutreach(env.DB);
+  // One batch a day at most: if a batch already went in the last 12 hours (e.g. sent early by hand), skip.
+  const recent = await env.DB.prepare("SELECT COUNT(*) n FROM outreach WHERE sent_at > ?").bind(Date.now() - 12 * 3600e3).first();
+  if (recent && recent.n >= limit) return { skipped: "batch already sent today" };
   const { results } = await env.DB.prepare("SELECT email, clubs, token FROM outreach WHERE status = 'queued' ORDER BY miles LIMIT ?").bind(limit).all();
   let sent = 0, failed = 0;
   for (const r of results) {

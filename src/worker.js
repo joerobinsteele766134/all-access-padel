@@ -41,7 +41,7 @@ export default {
     return env.ASSETS.fetch(request);
   },
   async scheduled(event, env, ctx) {
-    if (String(event.cron).startsWith("15 11 ")) { ctx.waitUntil(runOutreach(env).then(r => console.log("outreach", JSON.stringify(r))).catch(e => console.error("outreach job", e))); return; }
+    if (event.cron !== "30 9 * * *") { // every cron except the 9:30 alerts run is an outreach batch ctx.waitUntil(runOutreach(env).then(r => console.log("outreach", JSON.stringify(r))).catch(e => console.error("outreach job", e))); return; }
     ctx.waitUntil(runAlerts(env).then(r => console.log("alerts", JSON.stringify(r))).catch(e => console.error("alerts job", e)));
   },
 };
