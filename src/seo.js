@@ -70,9 +70,9 @@ footer{background:var(--navy);color:#c9d1e6;padding:24px max(5vw,16px);font-size
 </style>
 ${jsonld.map(j => `<script type="application/ld+json">${JSON.stringify(j).replace(/</g, "\\u003c")}</script>`).join("\n")}
 </head><body>
-<header><a class="logo" href="/">ALL ACCESS <i>PADEL</i></a><nav aria-label="Main"><a href="/#courts">Find courts</a><a href="/padel">Towns</a><a href="/padel-prices">Prices</a><a href="/guides">Guides</a><a href="/news">News</a><a class="k" href="/kit">Kit shop</a></nav></header>
+<header><a class="logo" href="/">ALL ACCESS <i>PADEL</i></a><nav aria-label="Main"><a href="/#courts">Find courts</a><a href="/padel">Towns</a><a href="/padel-prices">Prices</a><a href="/guides">Guides</a><a href="/news">News</a><a href="/contact">Contact</a><a class="k" href="/kit">Kit shop</a></nav></header>
 <main>${body}</main>
-<footer><p><a href="/">Find padel courts near you</a> · <a href="/padel">Padel by town</a> · <a href="/padel-prices">Padel prices</a> · <a href="/for-clubs">For clubs</a> · <a href="/about">About &amp; contact</a> · <a href="/privacy">Privacy</a> · <a href="/padel-courts">Padel courts by area</a> · <a href="/guides">Guides</a> · <a href="/kit">Kit shop</a> · <a href="/news">News</a></p>
+<footer><p><a href="/">Find padel courts near you</a> · <a href="/padel">Padel by town</a> · <a href="/padel-prices">Padel prices</a> · <a href="/for-clubs">For clubs</a> · <a href="/about">About</a> · <a href="/contact">Contact us</a> · <a href="/privacy">Privacy</a> · <a href="/padel-courts">Padel courts by area</a> · <a href="/guides">Guides</a> · <a href="/kit">Kit shop</a> · <a href="/news">News</a></p>
 <p>Venue list built from the LTA's padel court finder plus our own research. Prices change often, so check with the venue before you go. All Access Padel is independent and not connected to the venues listed.</p></footer>
 </body></html>`;
 
@@ -245,7 +245,7 @@ export async function seoRoute(request, env) {
   if (p === "/rules" || p === "/padel-rules") return Response.redirect(`${origin}/guides/padel-rules`, 301);
   if (p === "/shop") return Response.redirect(`${origin}/kit`, 301);
   if (p === "/badge.svg") return new Response(badgeSvg(url.searchParams.get("style") === "dark" ? "dark" : "light"), { headers: { "content-type": "image/svg+xml", "cache-control": "public, max-age=86400", "access-control-allow-origin": "*" } });
-  if (!(p === "/about" || p === "/privacy" || p === "/add" || p === "/for-clubs" || p === "/padel-prices" || p.startsWith("/padel-prices/") || p === "/padel" || p.startsWith("/padel/") || p === "/padel-courts" || p.startsWith("/padel-courts/") || p.startsWith("/venues/") || p === "/guides" || p.startsWith("/guides/") || p === "/kit" || p === "/news" || p === "/news.xml" || p === "/sitemap.xml" || p === "/llms.txt" || p === "/robots.txt")) return null;
+  if (!(p === "/about" || p === "/contact" || p === "/privacy" || p === "/add" || p === "/for-clubs" || p === "/padel-prices" || p.startsWith("/padel-prices/") || p === "/padel" || p.startsWith("/padel/") || p === "/padel-courts" || p.startsWith("/padel-courts/") || p.startsWith("/venues/") || p === "/guides" || p.startsWith("/guides/") || p === "/kit" || p === "/news" || p === "/news.xml" || p === "/sitemap.xml" || p === "/llms.txt" || p === "/robots.txt")) return null;
   if (p === "/robots.txt") return new Response(`# All Access Padel welcomes search engines and AI assistants.
 User-agent: *
 Allow: /
@@ -310,6 +310,7 @@ ${areas.map(a => `- [Padel courts in ${a.name}](${origin}/padel-courts/${a.slug}
     return new Response(body, { headers: { "content-type": "text/plain; charset=utf-8", "cache-control": "public, max-age=3600" } });
   }
   if (p === "/padel-courts") return html(indexPage(origin, areas, all.length));
+  if (p === "/contact") return Response.redirect(`${origin}/about#contact`, 301);
   if (p === "/about") return html(aboutPage({ origin, page, total: all.length }));
   if (p === "/privacy") return html(privacyPage({ origin, page }));
   if (p === "/add") return html(addPage({ origin, page }));
