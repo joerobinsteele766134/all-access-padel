@@ -25,7 +25,7 @@ async function allVenues(env) {
 }
 
 const page = ({ origin, path, title, description, body, jsonld = [], robots = "" }) => `<!DOCTYPE html>
-<html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="en-GB"><head><meta charset="utf-8"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><meta name="theme-color" content="#0d1b3d"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(description)}">${robots ? `<meta name="robots" content="${robots}">` : ""}
 <link rel="canonical" href="${origin}${path}"><link rel="alternate" type="application/rss+xml" title="UK padel news" href="/news.xml">
